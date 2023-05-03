@@ -1,40 +1,23 @@
-const { ApolloServer, gql } = require("apollo-server");
-const productResolvers = require("./src/resolvers/productResolvers");
-const categoryResolvers = require("./src/resolvers/categoryResolvers");
-const productTypeDefs = require("./src/typeDefs/productTypeDefs");
-const categoryTypeDefs = require("./src/typeDefs/categoryTypeDefs");
+const { ApolloServer, gql } = require('apollo-server');
+const { mergeTypeDefs, mergeResolvers } = require('@graphql-tools/merge');
+const { loadFilesSync } = require('@graphql-tools/load-files');
+const path = require('path');
 
-const typeDefs = gql`
-  type Query {
-    products: [Product!]!
-    product(id: ID!): Product
-    categories: [Category!]!
-    category(id: ID!): Category
-    featuredProducts: [Product!]!
-    newArrivalsProducts: [Product!]!
-  }
+const typeDefsArray = loadFilesSync(path.join(__dirname, './src/typeDefs'));
+const resolversArray = loadFilesSync(path.join(__dirname, './src/resolvers'));
 
-  type Location {
-    lat: Float!
-    lng: Float!
-  }
+for (const typeDefs of typeDefsArray) {
+  console.log('Loading typeDefs file:', typeDefs);
+  gql(typeDefs);
+}
 
-  ${productTypeDefs}
-  ${categoryTypeDefs}
-`;
+for (const resolvers of resolversArray) {
+  console.log('Loading resolvers file:', resolvers);
+  mergeResolvers(require(resolvers));
+}
 
-const resolvers = {
-  Query: {
-    ...productResolvers.Query,
-    ...categoryResolvers.Query,
-  },
-  Product: {
-    ...productResolvers.Product,
-  },
-  Category: {
-    ...categoryResolvers.Category,
-  },
-};
+const typeDefs = mergeTypeDefs(typeDefsArray);
+const resolvers = mergeResolvers(resolversArray);
 
 const server = new ApolloServer({ typeDefs, resolvers });
 
