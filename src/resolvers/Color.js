@@ -1,5 +1,5 @@
 const { Color } = require('../../models');
-const resolvers = {
+const ColorResolvers = {
     Query: {
       // Consulta para obtener todos los colores
       colors: async () => {
@@ -62,4 +62,4 @@ const resolvers = {
       },
     },
   };
-  module.exports = resolvers;  
+  module.exports = ColorResolvers;  

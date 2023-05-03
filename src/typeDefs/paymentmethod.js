@@ -1,6 +1,6 @@
 const { gql } = require("apollo-server");
 
-const TypeDefs = gql`
+const PaymentMethodTypeDefs = gql`
   type PaymentMethod {
     id: ID!
     name: String!
@@ -24,6 +24,6 @@ const TypeDefs = gql`
   }
 `;
 
-module.exports = TypeDefs;
+module.exports = PaymentMethodTypeDefs;
 
   

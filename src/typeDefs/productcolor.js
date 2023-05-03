@@ -1,6 +1,6 @@
 const { gql } = require("apollo-server");
 
-const typeDefs = gql`
+const ProductColorTypeDefs = gql`
   type ProductColor {
     id: ID!
     productId: ID!
@@ -16,6 +16,6 @@ const typeDefs = gql`
   }
 `;
 
-module.exports = typeDefs;
+module.exports = ProductColorTypeDefs;
 
   

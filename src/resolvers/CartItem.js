@@ -1,6 +1,6 @@
 const { CartItem, Cart, Product } = require('../../models');
 
-const resolvers = {
+const CartItemResolvers = {
   Query: {
     getCartItems: async (parent, { cartId }) => {
       const cartItems = await CartItem.findAll({
@@ -43,4 +43,4 @@ const resolvers = {
   },
 };
 
-module.exports = resolvers;
+module.exports = CartItemResolvers;

@@ -1,6 +1,6 @@
-const { gql } = require('apollo-server-express');
+const { gql } = require('apollo-server');
 
-const typeDefs = gql`
+const SizeTypeDefs = gql`
   type Size {
     id: ID!
     name: String!
@@ -19,4 +19,4 @@ const typeDefs = gql`
   }
 `;
 
-module.exports = typeDefs;
+module.exports = SizeTypeDefs;

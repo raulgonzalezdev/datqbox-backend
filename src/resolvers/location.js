@@ -1,6 +1,6 @@
-const { Location } = require('../../models');
+const { Location } = require("../../models");
 
-const resolvers = {
+const LocationResolvers = {
   Query: {
     locations: async () => {
       const locations = await Location.findAll();
@@ -35,4 +35,5 @@ const resolvers = {
   },
 };
 
-module.exports = resolvers;
+module.exports = LocationResolvers;
+

@@ -1,6 +1,6 @@
-const { gql } = require('apollo-server-express');
+const { gql } = require('apollo-server');
 
-const typeDefs = gql`
+const BranchTypeDefs = gql`
   type Branch {
     id: ID!
     name: String!
@@ -18,4 +18,4 @@ const typeDefs = gql`
   }
 `;
 
-module.exports = typeDefs;
+module.exports = BranchTypeDefs;

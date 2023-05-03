@@ -1,6 +1,6 @@
 const { Category } = require('../../models');
 
-const resolvers = {
+const CategoryResolvers = {
   Query: {
     categories: async () => {
       return await Category.findAll({ include: 'products' });
@@ -26,6 +26,6 @@ const resolvers = {
   },
 };
 
-module.exports = resolvers;
+module.exports = CategoryResolvers;
 
   

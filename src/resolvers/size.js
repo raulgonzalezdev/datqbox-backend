@@ -1,7 +1,7 @@
-const { UserInputError } = require('apollo-server-express');
+const { UserInputError } = require('apollo-server');
 const { Size, Product } = require('../../models');
 
-const resolvers = {
+const SizeResolvers = {
   Query: {
     size: async (_, { id }) => {
       const size = await Size.findByPk(id, { include: [Product] });
@@ -39,4 +39,4 @@ const resolvers = {
   },
 };
 
-module.exports = resolvers;
+module.exports = SizeResolvers;

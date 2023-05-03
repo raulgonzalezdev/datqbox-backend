@@ -1,6 +1,6 @@
 const { ProductSize } = require('../../models');
 
-const resolvers = {
+const ProductSizeResolvers = {
   Query: {
     getProductSizes: async () => {
       const productSizes = await ProductSize.findAll();
@@ -15,4 +15,4 @@ const resolvers = {
   },
 };
 
-module.exports = resolvers;
+module.exports = ProductSizeResolvers;

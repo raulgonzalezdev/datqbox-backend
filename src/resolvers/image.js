@@ -1,7 +1,7 @@
-const { UserInputError } = require('apollo-server-express');
+const { UserInputError } = require('apollo-server');
 const { Image, Product } = require('../../models');
 
-const resolvers = {
+const ImageResolvers = {
   Query: {
     images: async () => {
       return await Image.findAll({
@@ -29,4 +29,4 @@ const resolvers = {
   }
 };
 
-module.exports = resolvers;
+module.exports = ImageResolvers;

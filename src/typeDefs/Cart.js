@@ -1,12 +1,12 @@
 'use strict';
 
-const { UserInputError } = require('apollo-server-express');
+const { UserInputError } = require('apollo-server');
 const { Cart, CartItem, Product } = require('../../models');
 
 // TypeDefs
 const { gql } = require("apollo-server");
 
-const typeDefs = gql`
+const CartTypeDefs = gql`
   type Cart {
     id: ID!
     userId: Int!
@@ -32,4 +32,4 @@ const typeDefs = gql`
     product: Product!
   }
 `;
-module.exports = typeDefs;
+module.exports = CartTypeDefs;

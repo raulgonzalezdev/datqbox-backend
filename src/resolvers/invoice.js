@@ -1,7 +1,7 @@
 const { UserInputError } = require('apollo-server-express');
 const { Invoice, User, Branch, PaymentMethod, InvoiceItem } = require('../../models');
 
-const resolvers = {
+const InvoiceResolvers = {
   Query: {
     getInvoice: async (_, { id }) => {
       const invoice = await Invoice.findByPk(id, {
@@ -64,4 +64,4 @@ const resolvers = {
   },
 };
 
-module.exports = resolvers;
+module.exports = InvoiceResolvers;

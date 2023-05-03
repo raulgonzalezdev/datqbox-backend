@@ -1,6 +1,6 @@
 const { Branch } = require('../../models');
 
-const resolvers = {
+const BranchResolvers = {
   Query: {
     branches: async () => {
       return await Branch.findAll();
@@ -32,5 +32,5 @@ const resolvers = {
   }
 };
 
-module.exports = resolvers;
+module.exports = BranchResolvers;
 

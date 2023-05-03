@@ -1,7 +1,7 @@
 // review.typeDefs.js
 const { gql } = require("apollo-server");
 
-const typeDefs = gql`
+const ReviewTypeDefs = gql`
 type Review {
 id: ID!
 user: User!
@@ -26,4 +26,4 @@ getReviews: [Review!]!
 }
 `;
 
-module.exports = typeDefs;
+module.exports = ReviewTypeDefs;

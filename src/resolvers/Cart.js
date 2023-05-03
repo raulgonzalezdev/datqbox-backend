@@ -1,9 +1,8 @@
-
-const { UserInputError } = require('apollo-server-express');
+// src/resolvers/Cart.js
+const { UserInputError } = require('apollo-server');
 const { Cart, CartItem, Product } = require('../../models');
-const typeDefs = require('../typeDefs/Cart');
 
-const resolvers = {
+const CartResolvers = {
   Query: {
     getCart: async (_, { id }) => {
       const cart = await Cart.findByPk(id, {
@@ -43,4 +42,4 @@ const resolvers = {
   },
 };
 
-module.exports = { resolvers, typeDefs };
+module.exports = CartResolvers;

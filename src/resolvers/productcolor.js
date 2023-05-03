@@ -1,6 +1,6 @@
 const { ProductColor } = require('../../models');
 
-const resolvers = {
+const ProductColorResolvers = {
   Query: {
     productColors: async () => {
       const productColors = await ProductColor.findAll();
@@ -15,5 +15,5 @@ const resolvers = {
   },
 };
 
-module.exports = resolvers;
+module.exports = ProductColorResolvers;
 

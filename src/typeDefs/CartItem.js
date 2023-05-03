@@ -1,6 +1,6 @@
-const { gql } = require('apollo-server-express');
+const { gql } = require('apollo-server');
 
-const typeDefs = gql`
+const CartItemTypeDefs = gql`
   type CartItem {
     id: ID!
     cartId: Int!
@@ -20,4 +20,4 @@ const typeDefs = gql`
   }
 `;
 
-module.exports = typeDefs;
+module.exports = CartItemTypeDefs;

@@ -1,6 +1,6 @@
 const { UserCompany } = require('../../models');
 
-const resolvers = {
+const UserCompanyResolvers = {
   Query: {
     userCompanies: async () => {
       const userCompanies = await UserCompany.findAll();
@@ -42,4 +42,4 @@ const resolvers = {
   },
 };
 
-module.exports = resolvers;
+module.exports = UserCompanyResolvers;

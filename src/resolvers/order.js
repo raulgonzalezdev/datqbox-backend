@@ -1,55 +1,56 @@
-const { Order, User, OrderItem } = require('../../models');
+const { Order, OrderItem } = require('../../models');
 
-const resolvers = {
+const OrderResolvers = {
   Query: {
-    orders: async () => {
-      const orders = await Order.findAll({
-        include: ['orderItems']
-      });
-      return orders;
-    },
-    order: async (_, { id }) => {
-      const order = await Order.findByPk(id, {
-        include: ['orderItems']
-      });
-      return order;
-    }
+    orders: () => Order.findAll({ include: 'orderItems' }),
+    order: (_, { id }) => Order.findByPk(id, { include: 'orderItems' }),
+    orderItems: (_, { orderId }) => OrderItem.findAll({ where: { orderId } })
   },
+
   Mutation: {
     createOrder: async (_, { input }) => {
       const { userId, totalPrice, status } = input;
       const order = await Order.create({ userId, totalPrice, status });
       return order;
     },
+
+    createOrderItem: async (_, { input }) => {
+      const { orderId, productId, quantity, price } = input;
+      const orderItem = await OrderItem.create({ orderId, productId, quantity, price });
+      return orderItem;
+    },
+
     updateOrder: async (_, { id, input }) => {
       const { userId, totalPrice, status } = input;
-      const order = await Order.findByPk(id);
-      if (!order) {
-        throw new Error(`Order with id ${id} not found`);
-      }
-      order.userId = userId;
-      order.totalPrice = totalPrice;
-      order.status = status;
-      await order.save();
-      return order;
+      const [, orders] = await Order.update({ userId, totalPrice, status }, { where: { id }, returning: true });
+      return orders[0];
     },
+
+    updateOrderItem: async (_, { id, input }) => {
+      const { orderId, productId, quantity, price } = input;
+      const [, orderItems] = await OrderItem.update({ orderId, productId, quantity, price }, { where: { id }, returning: true });
+      return orderItems[0];
+    },
+
     deleteOrder: async (_, { id }) => {
-      const order = await Order.findByPk(id);
-      if (!order) {
-        throw new Error(`Order with id ${id} not found`);
-      }
-      await order.destroy();
-      return true;
-    }
+      const deletedRows = await Order.destroy({ where: { id } });
+      return Boolean(deletedRows);
+    },
+
+    deleteOrderItem: async (_, { id }) => {
+      const deletedRows = await OrderItem.destroy({ where: { id } });
+      return Boolean(deletedRows);
+    },
   },
+
   Order: {
-    orderItems: async (parent) => {
-      const orderItems = await OrderItem.findAll({
-        where: { orderId: parent.id }
-      });
-      return orderItems;
-    }
-  }
+    orderItems: (order) => order.orderItems,
+  },
+
+  OrderItem: {
+    order: (orderItem) => Order.findByPk(orderItem.orderId),    
+    product: (orderItem) => Product.findByPk(orderItem.productId), 
+},
 };
 
-module.exports = resolvers;
+module.exports = OrderResolvers;

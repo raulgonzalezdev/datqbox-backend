@@ -1,6 +1,6 @@
 const { gql } = require("apollo-server");
 
-const typeDefs = gql`
+const ProductSizeTypeDefs = gql`
 
 type ProductSize {
   id: ID!
@@ -24,4 +24,4 @@ extend type Mutation {
 }
 `;
 
-module.exports = typeDefs;
+module.exports = ProductSizeTypeDefs;

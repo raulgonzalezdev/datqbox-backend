@@ -1,6 +1,6 @@
-const { gql } = require('apollo-server-express');
+const { gql } = require('apollo-server');
 
-const typeDefs = gql`
+const AddressTypeDefs = gql`
   type Address {
     id: ID!
     street: String!
@@ -23,4 +23,4 @@ const typeDefs = gql`
   }
 `;
 
-module.exports = typeDefs;
+module.exports = AddressTypeDefs;

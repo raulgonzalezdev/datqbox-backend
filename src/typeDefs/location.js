@@ -1,6 +1,6 @@
-const { gql } = require('apollo-server');
+const { gql } = require("apollo-server");
 
-const typeDefs = gql`
+const LocationTypeDefs = gql`
   type Location {
     id: ID!
     lat: Float!
@@ -24,4 +24,4 @@ const typeDefs = gql`
   }
 `;
 
-module.exports = typeDefs;
+module.exports = LocationTypeDefs;

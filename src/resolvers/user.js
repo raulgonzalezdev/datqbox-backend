@@ -2,7 +2,7 @@ const { User, Address, Cart, Order, Review, Company } = require('../../models');
 const bcrypt = require('bcryptjs');
 const { generateToken } = require('../auth/auth');
 
-const resolvers = {
+const UserResolvers = {
   Query: {
     user: async (parent, { id }) => {
       try {
@@ -94,4 +94,4 @@ const resolvers = {
   }
 };
       
-module.exports = resolvers;
+module.exports = UserResolvers;

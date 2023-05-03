@@ -1,7 +1,7 @@
-const { UserInputError } = require('apollo-server-express');
+const { UserInputError } = require('apollo-server');
 const { Company, User, UserCompany } = require('../../models');
 
-const resolvers = {
+const CompanyResolvers = {
   Query: {
     company: async (_, { id }) => {
       return await Company.findByPk(id, {
@@ -44,4 +44,4 @@ const resolvers = {
   },
 };
 
-module.exports = resolvers;
+module.exports = CompanyResolvers;

@@ -1,6 +1,6 @@
 const { gql } = require('apollo-server');
 
-const typeDefs = gql`
+const InvoiceItemTypeDefs = gql`
   type InvoiceItem {
     id: ID!
     invoiceId: Int!
@@ -28,4 +28,4 @@ const typeDefs = gql`
   }
 `;
 
-module.exports = typeDefs;
+module.exports = InvoiceItemTypeDefs;

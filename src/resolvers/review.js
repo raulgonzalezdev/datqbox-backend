@@ -1,8 +1,9 @@
 // review.resolvers.js
-const { UserInputError } = require('apollo-server-express');
+const { UserInputError } = require('apollo-server');
 const { Review, Product, User } = require('../../models');
-const typeDefs = require('../typeDefs/review'); 
-const resolvers = {
+
+
+const ReviewResolvers = {
   Query: {
     getReviews: async () => {
       return await Review.findAll({
@@ -26,4 +27,4 @@ const resolvers = {
   },
 };
 
-module.exports = { resolvers, typeDefs }; 
+module.exports =  ReviewResolvers; 

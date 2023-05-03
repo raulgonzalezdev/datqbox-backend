@@ -1,6 +1,6 @@
 const { Address } = require('../../models');
 
-const resolvers = {
+const AddressResolvers = {
   Query: {
     addresses: async () => {
       return await Address.findAll();
@@ -32,4 +32,4 @@ const resolvers = {
   }
 };
 
-module.exports = resolvers;
+module.exports = AddressResolvers;

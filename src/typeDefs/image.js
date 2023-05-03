@@ -1,6 +1,6 @@
 const { gql } = require('apollo-server');
 
-const typeDefs = gql`
+const ImageTypeDefs = gql`
   type Image {
     id: ID!
     url: String!
@@ -22,4 +22,4 @@ const typeDefs = gql`
   }
 `;
 
-module.exports = typeDefs;
+module.exports = ImageTypeDefs;

@@ -1,6 +1,6 @@
 const { InvoiceItem } = require('../../models');
 
-const resolvers = {
+const InvoiceItemResolvers = {
   Query: {
     invoiceItems: async () => {
       const invoiceItems = await InvoiceItem.findAll();
@@ -35,4 +35,4 @@ const resolvers = {
   },
 };
 
-module.exports = resolvers;
+module.exports = InvoiceItemResolvers;

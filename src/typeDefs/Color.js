@@ -1,6 +1,6 @@
-const { gql } = require('apollo-server-express');
+const { gql } = require('apollo-server');
 
-const typeDefs = gql`
+const ColorTypeDefs = gql`
   type Color {
     id: ID!
     name: String!
@@ -21,4 +21,4 @@ const typeDefs = gql`
   }
 `;
 
-module.exports = typeDefs;
+module.exports = ColorTypeDefs;

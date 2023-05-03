@@ -1,6 +1,6 @@
-const PaymentMethod = require('../../models').PaymentMethod;
+const PaymentMethod = require('../../models');
 
-const resolvers = {
+const PaymentMethodResolvers = {
   Query: {
     paymentMethods: async () => {
       return await PaymentMethod.findAll();
@@ -27,4 +27,4 @@ const resolvers = {
   }
 };
 
-module.exports = resolvers;
+module.exports = PaymentMethodResolvers;
