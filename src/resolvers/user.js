@@ -1,4 +1,5 @@
-const { User, Address, Cart, Order, Review, Company } = require('../../models');
+const db = require('../../models');
+const { User, Address, Cart, Order, Review, Company } = db;
 const bcrypt = require('bcryptjs');
 const { generateToken } = require('../auth/auth');
 

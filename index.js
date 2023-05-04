@@ -1,5 +1,9 @@
-const { ApolloServer, gql } = require("apollo-server");
+//const { ApolloServer, gql } = require("apollo-server");
+const express = require('express');
+const { ApolloServer, gql } = require('apollo-server-express');
 const { merge } = require("lodash");
+const cors = require('cors');
+
 
 // Import typeDefs
 const AddressTypeDefs = require("./src/typeDefs/Address");
@@ -14,7 +18,6 @@ const InvoiceTypeDefs = require("./src/typeDefs/invoice");
 const InvoiceItemTypeDefs = require("./src/typeDefs/invoiceitem");
 const LocationTypeDefs = require("./src/typeDefs/location");
 const OrderTypeDefs = require("./src/typeDefs/order");
-
 const PaymentMethodTypeDefs = require("./src/typeDefs/paymentmethod");
 const ProductTypeDefs = require("./src/typeDefs/product");
 const ProductColorTypeDefs = require("./src/typeDefs/productcolor");
@@ -37,7 +40,6 @@ const InvoiceResolvers = require("./src/resolvers/invoice");
 const InvoiceItemResolvers = require("./src/resolvers/invoiceitem");
 const LocationResolvers = require("./src/resolvers/location");
 const OrderResolvers = require("./src/resolvers/order");
-
 const PaymentMethodResolvers = require("./src/resolvers/paymentmethod");
 const ProductResolvers = require("./src/resolvers/product");
 const ProductColorResolvers = require("./src/resolvers/productcolor");
@@ -95,13 +97,26 @@ const resolvers = merge(
   UserCompanyResolvers
 );
 
+// ...
 const server = new ApolloServer({ typeDefs, resolvers });
+const app = express();
 
-server
-  .listen()
-  .then(({ url }) => {
-    console.log(`🚀 Server ready at ${url}`);
-  })
-  .catch((err) => console.error(err));
+// Configura CORS con opciones personalizadas
+const corsOptions = {
+  origin: '*', // Reemplaza con el dominio de tu aplicación cliente
+  credentials: true, // Habilita el envío de credenciales (cookies, encabezados de autorización, etc.)
+};
 
+app.use(cors(corsOptions));
 
+// Agrega la función 'start' de forma asíncrona antes de llamar a 'applyMiddleware'
+(async () => {
+  await server.start();
+  server.applyMiddleware({ app, path: '/graphql', cors: false });
+
+  const PORT = process.env.PORT || 4000;
+
+  app.listen(PORT, () => {
+    console.log(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`);
+  });
+})();
