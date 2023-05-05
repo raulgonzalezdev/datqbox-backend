@@ -69,8 +69,35 @@ const UserResolvers = {
       } catch (err) {
         throw new Error(`Error deleting user with id ${id}: ${err}`);
       }
-    }
+    },
+    loginUser: async (parent, { input }) => {
+      try {
+        const { email, password } = input;
+        const user = await User.findOne({ where: { email } });
+  
+        if (!user) {
+          throw new Error('User not found');
+        }
+  
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+  
+        if (!isPasswordValid) {
+          throw new Error('Incorrect password');
+        }
+  
+        const token = generateToken(user);
+  
+        return {
+          token,
+          user,
+        };
+      } catch (err) {
+        throw new Error(`Error logging in user: ${err}`);
+      }
+    },
   },
+  
+
   User: {
     addresses: async (user) => {
       try {

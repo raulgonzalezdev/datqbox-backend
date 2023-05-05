@@ -33,6 +33,23 @@ const UserTypeDefs = gql`
     is_superuser: Boolean!
     is_active: Boolean!
   }
+
+  input UserUpdateInput {
+    firstName: String
+    lastName: String
+    email: String
+    password: String
+    avatar: String
+    role: String
+    is_superuser: Boolean
+    is_active: Boolean
+  }
+
+  input LoginInput {
+    email: String!
+    password: String!
+  }
+
   type AuthPayload {
     token: String!
     user: User!
@@ -40,8 +57,9 @@ const UserTypeDefs = gql`
 
   type Mutation {
     addUser(input: UserInput!): AuthPayload!
-    updateUser(id: ID!, input: UserInput!): User!
+    updateUser(id: ID!, input: UserUpdateInput!): User!
     deleteUser(id: ID!): Boolean!
+    loginUser(input: LoginInput): AuthPayload
   }
 `;
 
