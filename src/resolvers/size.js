@@ -34,9 +34,9 @@ const SizeResolvers = {
         throw new UserInputError(`Size with id ${id} not found.`);
       }
       await size.destroy();
-      return true;
-    },
+      return size; 
   },
+}
 };
 
 module.exports = SizeResolvers;

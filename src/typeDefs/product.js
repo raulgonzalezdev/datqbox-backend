@@ -5,14 +5,16 @@ const ProductTypeDefs = gql`
     id: ID!
     name: String!
     vendor: String!
+    sku: String!
+    description: String!
     image: String!
     price: Float!
     category: Category!
-    inventory: Int!
+    inventory: Float!
     rentalType: String!
     featured: Boolean!
     newarrivals: Boolean!
-    taxRate: Int!
+    taxRate: Float!
     images: [Image!]!
     reviews: [Review!]!
     orderItems: [OrderItem!]!
@@ -23,27 +25,31 @@ const ProductTypeDefs = gql`
   input CreateProductInput {
     name: String!
     vendor: String!
+    description: String!
+    sku: String!
     image: String!
     price: Float!
     categoryId: ID!
-    inventory: Int!
+    inventory: Float!
     rentalType: String!
     featured: Boolean!
     newarrivals: Boolean!
-    taxRate: Int!
+    taxRate: Float!
   }
 
   input UpdateProductInput {
     name: String
     vendor: String
+    sku: String
     image: String
+    description: String!
     price: Float
     categoryId: ID
-    inventory: Int
+    inventory: Float
     rentalType: String
     featured: Boolean
     newarrivals: Boolean
-    taxRate: Int
+    taxRate: Float
   }
 
   extend type Query {

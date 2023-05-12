@@ -12,7 +12,7 @@ npx sequelize model:generate --name Image --attributes url:string,productId:inte
 npx sequelize model:generate --name Location --attributes lat:float,lng:float
 npx sequelize model:generate --name Order --attributes userId:integer,totalPrice:float,status:string
 npx sequelize model:generate --name OrderItem --attributes orderId:integer,productId:integer,quantity:integer,price:float
-npx sequelize model:generate --name Product --attributes name:string,vendor:string,image:string,price:float,categoryId:integer,inventory:integer,rentalType:string,featured:boolean,newarrivals:boolean,taxRate:integer
+npx sequelize model:generate --name Product --attributes name:string,vendor:string,description:string,sku:string,image:string,price:float,categoryId:integer,inventory:float,rentalType:string,featured:boolean,newarrivals:boolean,taxRate:float
 npx sequelize model:generate --name InvoiceItem --attributes invoiceId:integer,productId:integer,quantity:integer,price:float
 npx sequelize model:generate --name PaymentMethod --attributes name:string,description:string
 npx sequelize model:generate --name ProductColor --attributes productId:integer,colorId:integer

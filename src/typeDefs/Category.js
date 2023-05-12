@@ -5,7 +5,7 @@ const CategoryTypeDefs = gql`
     id: ID!
     name: String!
     image: String!
-    products: [Product!]!
+    products: [Product]
   }
 
   extend type Query {

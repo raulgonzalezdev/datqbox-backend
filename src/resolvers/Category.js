@@ -1,12 +1,13 @@
-const { Category } = require('../../models');
+const { Category, Product } = require('../../models');
+
 
 const CategoryResolvers = {
   Query: {
     categories: async () => {
-      return await Category.findAll({ include: 'products' });
+      return await Category.findAll({ include: [Product] });
     },
     category: async (_, { id }) => {
-      return await Category.findByPk(id, { include: 'products' });
+      return await Category.findByPk(id, { include: [Product] });
     },
   },
   Mutation: {

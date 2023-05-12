@@ -9,14 +9,19 @@ const ColorTypeDefs = gql`
     updatedAt: String!
   }
 
+  input ColorInput {
+    name: String!
+    hexCode: String!
+  }
+
   extend type Query {
     colors: [Color!]
     color(id: ID!): Color
   }
 
   extend type Mutation {
-    createColor(name: String!, hexCode: String!): Color!
-    updateColor(id: ID!, name: String, hexCode: String): Color!
+    createColor(input: ColorInput!): Color!
+    updateColor(id: ID!, input: ColorInput): Color!
     deleteColor(id: ID!): Color!
   }
 `;
