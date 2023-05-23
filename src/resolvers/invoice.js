@@ -39,7 +39,7 @@ const InvoiceResolvers = {
   },
   Mutation: {
     createInvoice: async (_, { input }) => {
-      const { userId, branchId, userCompanyId, paymentMethodId, total, tax, status } = input;
+      const { userId, branchId, companyId, paymentMethodId, total, tax, status } = input;
       const user = await User.findByPk(userId);
       if (!user) {
         throw new UserInputError(`User with id ${userId} not found`);
@@ -53,15 +53,15 @@ const InvoiceResolvers = {
         throw new UserInputError(`Payment method with id ${paymentMethodId} not found`);
       }
       let userCompany = null;
-      if (userCompanyId) {
-        userCompany = await UserCompany.findOne({ where: { userId: userId, companyId: userCompanyId } });
+      if (companyId) {
+        userCompany = await UserCompany.findOne({ where: { userId: userId, companyId: companyId } });
         if (!userCompany) {
-          throw new UserInputError(`UserCompany with user id ${userId} and company id ${userCompanyId} not found`);
+          throw new UserInputError(`UserCompany with user id ${userId} and company id ${companyId} not found`);
         }
       }
       
   
-      return await newInvoice.reload({
+      return await Invoice.reload({
         include: [User, UserCompany, Branch, PaymentMethod, InvoiceItem],
       });
     },

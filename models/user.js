@@ -15,7 +15,7 @@ this.hasMany(models.Address, { foreignKey: 'userId', onDelete: 'CASCADE', onUpda
  this.hasMany(models.Cart, { foreignKey: 'userId', onDelete: 'CASCADE', onUpdate: 'CASCADE' }); 
   this.hasMany(models.Order, { foreignKey: 'userId', onDelete: 'CASCADE', onUpdate: 'CASCADE' }); 
    this.hasMany(models.Review, { foreignKey: 'userId', onDelete: 'CASCADE', onUpdate: 'CASCADE' }); 
-  //  this.hasMany(models.Invoice, { foreignKey: 'userId' , onDelete: 'CASCADE', onUpdate: 'CASCADE', as: 'invoices' });
+    this.hasMany(models.Invoice, { foreignKey: 'userId' , onDelete: 'CASCADE', onUpdate: 'CASCADE', as: 'invoices' });
    this.belongsToMany(models.Company, {through: 'UserCompany',foreignKey: 'userId', otherKey: 'companyId', as: 'companies' });
 
     }

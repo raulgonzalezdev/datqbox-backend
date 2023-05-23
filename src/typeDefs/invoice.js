@@ -16,7 +16,7 @@ const InvoiceTypeDefs = gql`
 
   input CreateInvoiceInput {
     userId: Int!
-    userCompanyId: Int!
+    companyId: Int!
     branchId: Int!
     paymentMethodId: Int!
     total: Float!

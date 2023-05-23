@@ -19,8 +19,7 @@ module.exports = (sequelize, DataTypes) => {
           as: 'companys' 
       });
       this.hasMany(models.Invoice, { 
-        foreignKey: 'userCompanyId', 
-        otherKey: 'userId'
+        foreignKey: 'companyId'
       });
       
 

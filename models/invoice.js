@@ -5,10 +5,10 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class Invoice extends Model {
     static associate(models) {
-      // this.belongsTo(models.User, { foreignKey: 'userId', onDelete: 'CASCADE', onUpdate: 'CASCADE', as: 'user' }); 
+      this.belongsTo(models.User, { foreignKey: 'userId', onDelete: 'CASCADE', onUpdate: 'CASCADE', as: 'user' }); 
      
       this.belongsTo(models.UserCompany, { 
-        foreignKey: 'userCompanyId', 
+        foreignKey: 'companyId', 
         otherKey: 'userId', 
         onDelete: 'CASCADE', 
         onUpdate: 'CASCADE', 
@@ -27,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,  // establece que este campo es requerido
     },
-    userCompanyId: {
+    companyId: {
       type: DataTypes.INTEGER,
       allowNull: false,  // este campo puede ser nulo porque un usuario puede no tener una compañía
     },
