@@ -1,11 +1,17 @@
 const { UserInputError } = require('apollo-server-express');
-const { Invoice, User, Branch, PaymentMethod, InvoiceItem } = require('../../models');
+const { Invoice, User, Branch, PaymentMethod, InvoiceItem,UserCompany } = require('../../models');
 
 const InvoiceResolvers = {
   Query: {
     getInvoice: async (_, { id }) => {
       const invoice = await Invoice.findByPk(id, {
-        include: [User, Branch, PaymentMethod, InvoiceItem],
+        include: [
+          { model: User, as: 'user' }, 
+          { model: UserCompany, as: 'companies' }, 
+          { model: Branch, as: 'branch' }, 
+          { model: PaymentMethod, as: 'paymentMethod' }, 
+          InvoiceItem
+        ],
       });
 
       if (!invoice) {
@@ -16,15 +22,24 @@ const InvoiceResolvers = {
     },
     getInvoices: async () => {
       const invoices = await Invoice.findAll({
-        include: [User, Branch, PaymentMethod, InvoiceItem],
+        include: [
+          { model: User, as: 'user' }, 
+          { model: UserCompany, as: 'companies' },
+          { model: Branch, as: 'branch' }, 
+          { model: PaymentMethod, as: 'paymentMethod' }, 
+          InvoiceItem
+        ],
       });
-
-      return invoices;
+    
+      // Filtrar facturas sin usuario asociado
+      const invoicesWithUser = invoices.filter(invoice => invoice.user !== null);
+    
+      return invoicesWithUser;
     },
   },
   Mutation: {
     createInvoice: async (_, { input }) => {
-      const { userId, branchId, paymentMethodId, total, tax, status } = input;
+      const { userId, branchId, userCompanyId, paymentMethodId, total, tax, status } = input;
       const user = await User.findByPk(userId);
       if (!user) {
         throw new UserInputError(`User with id ${userId} not found`);
@@ -37,9 +52,17 @@ const InvoiceResolvers = {
       if (!paymentMethod) {
         throw new UserInputError(`Payment method with id ${paymentMethodId} not found`);
       }
-      const newInvoice = await Invoice.create({ userId, branchId, paymentMethodId, total, tax, status });
+      let userCompany = null;
+      if (userCompanyId) {
+        userCompany = await UserCompany.findOne({ where: { userId: userId, companyId: userCompanyId } });
+        if (!userCompany) {
+          throw new UserInputError(`UserCompany with user id ${userId} and company id ${userCompanyId} not found`);
+        }
+      }
+      
+  
       return await newInvoice.reload({
-        include: [User, Branch, PaymentMethod, InvoiceItem],
+        include: [User, UserCompany, Branch, PaymentMethod, InvoiceItem],
       });
     },
     updateInvoice: async (_, { id, input }) => {
@@ -50,7 +73,7 @@ const InvoiceResolvers = {
       }
       const updatedInvoice = await invoice.update({ total, tax, status });
       return await updatedInvoice.reload({
-        include: [User, Branch, PaymentMethod, InvoiceItem],
+        include: [User, UserCompany, Branch, PaymentMethod, InvoiceItem],
       });
     },
     deleteInvoice: async (_, { id }) => {

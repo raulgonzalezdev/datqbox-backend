@@ -21,7 +21,9 @@ const UserTypeDefs = gql`
   type Query {
     user(id: ID!): User
     users: [User!]!
+    validateToken(token: String!): Boolean!
   }
+  
 
   input UserInput {
     firstName: String!

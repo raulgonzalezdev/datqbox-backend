@@ -1,9 +1,11 @@
 const { gql } = require('apollo-server');
 
+
 const InvoiceTypeDefs = gql`
   type Invoice {
     id: ID!
     user: User!
+    company: UserCompany!
     branch: Branch!
     paymentMethod: PaymentMethod!
     total: Float!
@@ -14,6 +16,7 @@ const InvoiceTypeDefs = gql`
 
   input CreateInvoiceInput {
     userId: Int!
+    userCompanyId: Int!
     branchId: Int!
     paymentMethodId: Int!
     total: Float!

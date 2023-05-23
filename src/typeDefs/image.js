@@ -4,7 +4,7 @@ const ImageTypeDefs = gql`
   type Image {
     id: ID!
     url: String!
-    product: Product!
+    product: Product
   }
 
   extend type Query {
@@ -12,13 +12,24 @@ const ImageTypeDefs = gql`
     image(id: ID!): Image!
   }
 
+  input ProductInput {
+    id: ID!
+  }
+
   input AddImageInput {
     url: String!
-    productId: ID!
+    product: ProductInput!
+  }
+
+  input AddImagesInput {
+    images: [AddImageInput!]!
   }
 
   extend type Mutation {
     addImage(input: AddImageInput!): Image!
+    addImages(input: AddImagesInput!): [Image!]!
+    removeImage(id: ID!): Boolean!
+    removeProductImages(productId: ID!): Boolean!
   }
 `;
 

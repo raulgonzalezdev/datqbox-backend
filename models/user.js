@@ -11,13 +11,22 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-this.hasMany(models.Address, { foreignKey: 'userId', onDelete: 'CASCADE', onUpdate: 'CASCADE' });  this.hasMany(models.Cart, { foreignKey: 'userId', onDelete: 'CASCADE', onUpdate: 'CASCADE' });  this.hasMany(models.Order, { foreignKey: 'userId', onDelete: 'CASCADE', onUpdate: 'CASCADE' });  this.hasMany(models.Review, { foreignKey: 'userId', onDelete: 'CASCADE', onUpdate: 'CASCADE' });  this.belongsToMany(models.Company, { through: models.UserCompany });
+this.hasMany(models.Address, { foreignKey: 'userId', onDelete: 'CASCADE', onUpdate: 'CASCADE' }); 
+ this.hasMany(models.Cart, { foreignKey: 'userId', onDelete: 'CASCADE', onUpdate: 'CASCADE' }); 
+  this.hasMany(models.Order, { foreignKey: 'userId', onDelete: 'CASCADE', onUpdate: 'CASCADE' }); 
+   this.hasMany(models.Review, { foreignKey: 'userId', onDelete: 'CASCADE', onUpdate: 'CASCADE' }); 
+  //  this.hasMany(models.Invoice, { foreignKey: 'userId' , onDelete: 'CASCADE', onUpdate: 'CASCADE', as: 'invoices' });
+   this.belongsToMany(models.Company, {through: 'UserCompany',foreignKey: 'userId', otherKey: 'companyId', as: 'companies' });
+
     }
   }
   User.init({
     firstName: DataTypes.STRING,
     lastName: DataTypes.STRING,
-    email: DataTypes.STRING,
+    email: {
+      type: DataTypes.STRING,
+      unique: true,  // Hacer que el campo de email sea único
+    },
     password: DataTypes.STRING,
     avatar: DataTypes.STRING,
     role: DataTypes.STRING,

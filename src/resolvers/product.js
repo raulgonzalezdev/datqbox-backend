@@ -1,16 +1,17 @@
-const { Product, Category, Image, Review, OrderItem, Color, Size } = require("../../models");
+const { Product, Category, Image, Review, OrderItem, Color, Size, ProductColor, ProductSize } = require("../../models");
+
 
 const ProductResolvers = {
   Query: {
     products: async () => {
       const products = await Product.findAll({
-        include: [Category, Image, Review, OrderItem, Color, Size],
+        include: [Category, Image, Review, OrderItem, ProductColor, ProductSize],
       });
       return products;
     },
     product: async (_, { id }) => {
       const product = await Product.findByPk(id, {
-        include: [Category, Image, Review, OrderItem, Color, Size],
+        include: [Category, Image, Review, OrderItem, ProductColor, ProductSize],
       });
       return product;
     },
@@ -47,17 +48,15 @@ const ProductResolvers = {
       const orderItems = await OrderItem.findAll({ where: { productId: product.id } });
       return orderItems;
     },
-    colors: async (product) => {
-      const colors = await product.getColors();
-      return colors;
+    productColors: async (product) => {
+      const productColors = await ProductColor.findAll({ where: { ProductId: product.id } });
+      return productColors;
     },
-    sizes: async (product) => {
-      const sizes = await product.getSizes();
-      return sizes;
+    productSizes: async (product) => {
+      const productSizes = await ProductSize.findAll({ where: { ProductId: product.id } });
+      return productSizes;
     },
   },
 };
 
 module.exports = ProductResolvers;
-
-  

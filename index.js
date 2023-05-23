@@ -1,8 +1,15 @@
-//const { ApolloServer, gql } = require("apollo-server");
+
 const express = require('express');
 const { ApolloServer, gql } = require('apollo-server-express');
+const { graphqlUploadExpress } = require('graphql-upload');
+const { AuthenticationError } = require('apollo-server');
+const jwt = require('jsonwebtoken');
+
+
 const { merge } = require("lodash");
 const cors = require('cors');
+const path = require('path');
+require('dotenv').config();
 
 
 // Import typeDefs
@@ -26,6 +33,7 @@ const ReviewTypeDefs = require("./src/typeDefs/review");
 const SizeTypeDefs = require("./src/typeDefs/size");
 const UserTypeDefs = require("./src/typeDefs/user");
 const UserCompanyTypeDefs = require("./src/typeDefs/usercompany");
+const UploadTypeDefs = require("./src/typeDefs/Upload");
 
 // Import resolvers
 const AddressResolvers = require("./src/resolvers/Address");
@@ -48,6 +56,7 @@ const ReviewResolvers = require("./src/resolvers/review");
 const SizeResolvers = require("./src/resolvers/size");
 const UserResolvers = require("./src/resolvers/user");
 const UserCompanyResolvers = require("./src/resolvers/usercompany");
+const UploadReolvers = require("./src/resolvers/Upload");
 
 // Combine typeDefs
 const typeDefs = gql`
@@ -71,6 +80,8 @@ const typeDefs = gql`
   ${SizeTypeDefs}
   ${UserTypeDefs}
   ${UserCompanyTypeDefs}
+  ${UploadTypeDefs}
+
   `;
 
 // Combine resolvers
@@ -94,20 +105,52 @@ const resolvers = merge(
   ReviewResolvers,
   SizeResolvers,
   UserResolvers,
-  UserCompanyResolvers
+  UserCompanyResolvers,
+  UploadReolvers
+
 );
 
-// ...
-const server = new ApolloServer({ typeDefs, resolvers });
+
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  uploads: false,
+  context: ({ req }) => {
+    const token = req.headers.authorization || '';
+    const path = req.body.operationName;  // Obteniendo el nombre de la operación
+   
+    const publicPaths = ['LoginUser', 'AddUser', 'ValidateToken'];  // Define tus rutas públicas aquí
+
+    if (publicPaths.includes(path)) {
+      // Si la ruta está en la lista de rutas públicas, se puede acceder a ella sin un token
+      return {};
+    }
+
+    // Si no es una ruta pública, entonces necesitamos autenticar el token
+    try {
+      const decodedToken = jwt.verify(token.replace("Bearer ", ""), process.env.JWT_SECRET);
+       return { user: decodedToken };
+      
+    } catch (e) {
+      console.error(e);
+      throw new AuthenticationError('Authentication token is invalid, please log in');
+    }
+  },
+});
+
 const app = express();
 
 // Configura CORS con opciones personalizadas
 const corsOptions = {
-  origin: '*', // Reemplaza con el dominio de tu aplicación cliente
-  credentials: true, // Habilita el envío de credenciales (cookies, encabezados de autorización, etc.)
+  origin: '*', 
+  credentials: true, 
 };
 
 app.use(cors(corsOptions));
+
+app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 20 })); 
+
+app.use('/uploads', express.static('uploads'));
 
 // Agrega la función 'start' de forma asíncrona antes de llamar a 'applyMiddleware'
 (async () => {

@@ -15,8 +15,8 @@ npx sequelize model:generate --name OrderItem --attributes orderId:integer,produ
 npx sequelize model:generate --name Product --attributes name:string,vendor:string,description:string,sku:string,image:string,price:float,categoryId:integer,inventory:float,rentalType:string,featured:boolean,newarrivals:boolean,taxRate:float
 npx sequelize model:generate --name InvoiceItem --attributes invoiceId:integer,productId:integer,quantity:integer,price:float
 npx sequelize model:generate --name PaymentMethod --attributes name:string,description:string
-npx sequelize model:generate --name ProductColor --attributes productId:integer,colorId:integer
-npx sequelize model:generate --name ProductSize --attributes productId:integer,sizeId:integer
+npx sequelize model:generate --name ProductColor --attributes ProductId:integer,ColorId:integer
+npx sequelize model:generate --name ProductSize --attributes ProductId:integer,SizeId:integer
 npx sequelize model:generate --name Review --attributes userId:integer,productId:integer,rating:integer,comment:text
 npx sequelize model:generate --name Size --attributes name:string
 npx sequelize model:generate --name Invoice --attributes userId:integer,branchId:integer,paymentMethodId:integer,total:float,tax:float,status:string

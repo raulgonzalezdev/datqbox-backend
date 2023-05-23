@@ -10,13 +10,20 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       userId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: false,
+      },
+      userCompanyId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
       },
       branchId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: false,
       },
       paymentMethodId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: false,
       },
       total: {
         type: Sequelize.FLOAT

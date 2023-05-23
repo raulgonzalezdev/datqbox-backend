@@ -1,9 +1,11 @@
-const PaymentMethod = require('../../models');
+const { PaymentMethod } = require('../../models');
+
 
 const PaymentMethodResolvers = {
   Query: {
     paymentMethods: async () => {
-      return await PaymentMethod.findAll();
+      const PaymentMethods = await PaymentMethod.findAll();
+      return PaymentMethods;
     },
     paymentMethod: async (parent, { id }) => {
       return await PaymentMethod.findByPk(id);
@@ -21,9 +23,13 @@ const PaymentMethodResolvers = {
     },
     deletePaymentMethod: async (parent, { id }) => {
       const paymentMethod = await PaymentMethod.findByPk(id);
+      if (!paymentMethod) {
+        throw new Error(`No se encontró el método de pago con id ${id}`);
+      }
       await paymentMethod.destroy();
-      return paymentMethod;
+      return true;
     }
+    
   }
 };
 

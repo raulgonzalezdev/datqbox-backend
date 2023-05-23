@@ -1,26 +1,35 @@
 const { gql } = require("apollo-server");
 
 const ProductColorTypeDefs = gql`
-  type ProductColor {
-    id: ID!
-    productId: ID!
-    colorId: ID!
+
+type ProductColor {
+  id: ID!
+  ProductId: ID!
+  ColorId: ID!
+  color: Color!
+}
+
+  
+  input ProductColorInput {
+    ProductId: ID!
+    ColorId: ID!
+    
   }
 
-  input ProductColorInput {
-    productId: ID!
-    colorId: ID!
-    
+  input RemoveProductColorInput {
+    ProductId: ID!
+   
   }
 
   extend type Query {
     productColors: [ProductColor!]!
-    getProductColorsByProductId(productId: ID!): [ProductColor!]!
+    getProductColorsByProductId(ProductId: ID!): [ProductColor!]!
   }
 
   extend type Mutation {
-    addProductColor(productId: ID!, colorId: ID!): ProductColor!
-    removeProductColor(id: ID!): Boolean!
+    addProductColor(ProductId: ID!, ColorId: ID!): ProductColor!
+    removeProductColor(input: RemoveProductColorInput!): Boolean!
+    addMultipleProductColors(input: [ProductColorInput!]!): [ProductColor!]!
   }
 `;
 

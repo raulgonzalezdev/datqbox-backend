@@ -7,9 +7,13 @@ const CategoryResolvers = {
       return await Category.findAll({ include: [Product] });
     },
     category: async (_, { id }) => {
+      if (!id) {
+        throw new Error('No se proporcionó un ID de categoría.');
+      }
       return await Category.findByPk(id, { include: [Product] });
     },
-  },
+
+   },
   Mutation: {
     createCategory: async (_, { input }) => {
       const newCategory = await Category.create(input);

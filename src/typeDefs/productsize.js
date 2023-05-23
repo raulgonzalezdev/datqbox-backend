@@ -1,27 +1,33 @@
 const { gql } = require("apollo-server");
 
 const ProductSizeTypeDefs = gql`
-  type ProductSize {
-    id: ID!
-    productId: ID!
-    sizeId: ID!
-    stock: Int!
-  }
+type ProductSize {
+  id: ID!
+  ProductId: ID!
+  SizeId: ID!
+  stock: Int
+  size: Size!
+}
 
   input ProductSizeInput {
-    productId: ID!
-    sizeId: ID!
-    stock: Int!
+    ProductId: ID!
+    SizeId: ID!
+    stock: Int
+  }
+  input RemoveProductSizeInput {
+    ProductId: ID!
+ 
   }
 
   extend type Query {
     getProductSizes: [ProductSize!]!
-    getProductSizesByProductId(productId: ID!): [ProductSize!]!
+    getProductSizesByProductId(ProductId: ID!): [ProductSize!]!
   }
 
   extend type Mutation {
     addProductSize(productSize: ProductSizeInput!): ProductSize!
-    removeProductSize(id: ID!): Boolean!
+    removeProductSize(input: RemoveProductSizeInput!): Boolean!
+    addMultipleProductSizes(input: [ProductSizeInput!]!): [ProductSize!]!
   }
 `;
 

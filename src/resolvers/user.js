@@ -1,7 +1,8 @@
 const db = require('../../models');
 const { User, Address, Cart, Order, Review, Company } = db;
 const bcrypt = require('bcryptjs');
-const { generateToken } = require('../auth/auth');
+const { generateToken , verifyToken} = require('../auth/auth');
+
 
 const UserResolvers = {
   Query: {
@@ -36,7 +37,17 @@ const UserResolvers = {
       } catch (err) {
         throw new Error(`Error fetching users: ${err}`);
       }
-    }
+    },
+    validateToken: async (_, { token }) => {
+      const decodedToken = verifyToken(token);
+      // Si el token es válido, decodedToken contendrá el payload del token.
+      // Si el token no es válido o ha expirado, verifyToken devolverá null.
+      if (decodedToken !== null) {
+        return true;
+      } else {
+        return false;
+      }
+    },
   },
   Mutation: {
     addUser: async (parent, { input }) => {
@@ -49,6 +60,10 @@ const UserResolvers = {
           user,
         };
       } catch (err) {
+        // Asumiendo que estás utilizando pg-promise, pg o sequelize
+        if (err.code === '23505') { // Código de error para violación de la restricción de unicidad en PostgreSQL
+          throw new Error('Este correo electrónico ya está en uso');
+        }
         throw new Error(`Error adding user: ${err}`);
       }
     },

@@ -27,8 +27,8 @@ const CompanyTypeDefs = gql`
   extend type Mutation {
     addCompany(input: CompanyInput!): Company!
     updateCompany(id: ID!, input: CompanyInput!): Company!
-    deleteCompany(id: ID!): Company!
+    deleteCompany(id: ID!): Boolean!
   }
 `;
 
-module.exports = CompanyTypeDefs;
+module.exports = CompanyTypeDefs; 

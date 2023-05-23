@@ -4,20 +4,41 @@ const {
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Invoice extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
-      // define association here
-this.belongsTo(models.User, { foreignKey: 'userId', onDelete: 'CASCADE', onUpdate: 'CASCADE' });  this.belongsTo(models.Branch, { foreignKey: 'branchId', onDelete: 'CASCADE', onUpdate: 'CASCADE' });  this.belongsTo(models.PaymentMethod, { foreignKey: 'paymentMethodId', onDelete: 'CASCADE', onUpdate: 'CASCADE' });  this.hasMany(models.InvoiceItem, { foreignKey: 'invoiceId', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+      // this.belongsTo(models.User, { foreignKey: 'userId', onDelete: 'CASCADE', onUpdate: 'CASCADE', as: 'user' }); 
+     
+      this.belongsTo(models.UserCompany, { 
+        foreignKey: 'userCompanyId', 
+        otherKey: 'userId', 
+        onDelete: 'CASCADE', 
+        onUpdate: 'CASCADE', 
+        as: 'companies'
+      });
+      
+
+
+      this.belongsTo(models.Branch, { foreignKey: 'branchId', onDelete: 'CASCADE', onUpdate: 'CASCADE', as: 'branch' });  
+      this.belongsTo(models.PaymentMethod, { foreignKey: 'paymentMethodId', onDelete: 'CASCADE', onUpdate: 'CASCADE', as: 'paymentMethod' });
+      this.hasMany(models.InvoiceItem, { foreignKey: 'invoiceId', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
     }
   }
   Invoice.init({
-    userId: DataTypes.INTEGER,
-    branchId: DataTypes.INTEGER,
-    paymentMethodId: DataTypes.INTEGER,
+    userId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,  // establece que este campo es requerido
+    },
+    userCompanyId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,  // este campo puede ser nulo porque un usuario puede no tener una compañía
+    },
+    branchId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,  // establece que este campo es requerido
+    },
+    paymentMethodId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,  // establece que este campo es requerido
+    },
     total: DataTypes.FLOAT,
     tax: DataTypes.FLOAT,
     status: DataTypes.STRING

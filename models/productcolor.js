@@ -12,21 +12,26 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       ProductColor.belongsTo(models.Product, {
-        foreignKey: 'productId',
-        field: 'productId' // Agrega esto
+        foreignKey: 'ProductId',
+        field: 'ProductId' // Agrega esto
       });
       
       ProductColor.belongsTo(models.Color, {
-        foreignKey: 'colorId',
-        field: 'colorId' // Y esto
+        foreignKey: 'ColorId',
+        field: 'ColorId' // Y esto
       });
 
       // Agregar aquí cualquier otra relación si es necesario
     }
   }
   ProductColor.init({
-    productId: DataTypes.INTEGER,
-    colorId: DataTypes.INTEGER
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    ProductId: DataTypes.INTEGER,
+    ColorId: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'ProductColor',

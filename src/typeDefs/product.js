@@ -18,8 +18,16 @@ const ProductTypeDefs = gql`
     images: [Image!]!
     reviews: [Review!]!
     orderItems: [OrderItem!]!
-    colors: [Color!]!
-    sizes: [Size!]!
+    productColors: [ProductColor!]!
+    productSizes: [ProductSize!]!
+  }
+
+  type ProductColor {
+    color: Color!
+  }
+
+  type ProductSize {
+    size: Size!
   }
 
   input CreateProductInput {

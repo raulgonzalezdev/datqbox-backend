@@ -28,12 +28,17 @@ const CompanyResolvers = {
       return company;
     },
     deleteCompany: async (_, { id }) => {
-      const company = await Company.findByPk(id);
-      if (!company) {
-        throw new UserInputError(`Company with id ${id} not found`);
+      try {
+        const company = await Company.findByPk(id);
+        if (!company) {
+          throw new UserInputError(`Company with id ${id} not found`);
+        }
+        await company.destroy();
+        return true; // Devuelve `true` si la compañía se eliminó correctamente.
+      } catch (error) {
+        console.error(error);
+        return false; // Devuelve `false` si ocurrió un error.
       }
-      await company.destroy();
-      return company;
     },
   },
   Company: {

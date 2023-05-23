@@ -15,7 +15,7 @@ const SizeTypeDefs = gql`
   extend type Mutation {
     createSize(name: String!): Size
     updateSize(id: ID!, name: String!): Size
-    deleteSize(id: ID!): Size
+    deleteSize(id: ID!): Boolean!
   }
 `;
 

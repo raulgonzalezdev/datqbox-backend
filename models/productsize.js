@@ -1,30 +1,27 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
-module.exports = (sequelize, DataTypes) => {
+const { Model, DataTypes } = require('sequelize');
+
+module.exports = (sequelize) => {
   class ProductSize extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
-      // define association here
       ProductSize.belongsTo(models.Product, {
-        foreignKey: 'productId',
-        field: 'productId' // Agrega esto
+        foreignKey: 'ProductId',
+        as: 'product'
       });
       ProductSize.belongsTo(models.Size, {
-        foreignKey: 'sizeId',
-        field: 'sizeId' // Corrige esto
+        foreignKey: 'SizeId',
+        as: 'size'
       });
-      // Agregar aquí cualquier otra relación si es necesario
     }
   }
   ProductSize.init({
-    productId: DataTypes.INTEGER,
-    sizeId: DataTypes.INTEGER
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    ProductId: DataTypes.INTEGER,
+    SizeId: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'ProductSize',
