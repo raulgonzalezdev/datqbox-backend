@@ -1,45 +1,42 @@
 const { gql } = require('apollo-server');
+const { GraphQLDate } = require('graphql-iso-date');
 
-
-const InvoiceTypeDefs = gql`
+const typeDefs = gql`
+  scalar Date
   type Invoice {
     id: ID!
-    user: User!
-    company: UserCompany!
-    branch: Branch!
-    paymentMethod: PaymentMethod!
-    total: Float!
-    tax: Float!
-    status: String!
-    invoiceItems: [InvoiceItem!]!
+    user: User
+    companies: [Company]
+    branch: Branch
+    paymentMethod: PaymentMethod
+    invoiceItems: [InvoiceItem]
+    total: Float
+    tax: Float
+    status: String
+    createdAt: Date
+    updatedAt: Date
   }
 
-  input CreateInvoiceInput {
-    userId: Int!
-    companyId: Int!
-    branchId: Int!
-    paymentMethodId: Int!
-    total: Float!
-    tax: Float!
-    status: String!
+  type Query {
+    getInvoice(id: ID!): Invoice
+    getAllInvoices: [Invoice]
   }
 
-  input UpdateInvoiceInput {
+  input InvoiceInput {
+    userId: ID!
+    companyId: ID!
+    branchId: ID!
+    paymentMethodId: ID!
     total: Float
     tax: Float
     status: String
   }
 
-  extend type Query {
-    getInvoice(id: ID!): Invoice!
-    getInvoices: [Invoice!]!
-  }
-
-  extend type Mutation {
-    createInvoice(input: CreateInvoiceInput!): Invoice!
-    updateInvoice(id: ID!, input: UpdateInvoiceInput!): Invoice!
-    deleteInvoice(id: ID!): Boolean!
+  type Mutation {
+    createInvoice(input: InvoiceInput!): Invoice
+    updateInvoice(id: ID!, input: InvoiceInput!): Invoice
+    deleteInvoice(id: ID!): Boolean
   }
 `;
 
-module.exports = InvoiceTypeDefs;
+module.exports = typeDefs;

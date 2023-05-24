@@ -15,13 +15,9 @@ module.exports = (sequelize, DataTypes) => {
   this.hasMany(models.Image, { foreignKey: "productId", onDelete: "CASCADE", onUpdate: "CASCADE" });
   this.hasMany(models.Review, { foreignKey: "productId", onDelete: "CASCADE", onUpdate: "CASCADE" });
   this.hasMany(models.OrderItem, { foreignKey: "productId", onDelete: "CASCADE", onUpdate: "CASCADE" });
-  // this.belongsToMany(models.Color, { through: models.ProductColor });
-  // this.belongsToMany(models.Size, { through: models.ProductSize });
-
-  // Changed these two lines
-
-    this.hasMany(models.ProductColor, { foreignKey: "ProductId", onDelete: "CASCADE", onUpdate: "CASCADE" });
-    this.hasMany(models.ProductSize, { foreignKey: "ProductId", onDelete: "CASCADE", onUpdate: "CASCADE" });
+  this.hasMany(models.InvoiceItem, { foreignKey: "productId", onDelete: "CASCADE", onUpdate: "CASCADE" });
+  this.hasMany(models.ProductColor, { foreignKey: "ProductId", onDelete: "CASCADE", onUpdate: "CASCADE" });
+  this.hasMany(models.ProductSize, { foreignKey: "ProductId", onDelete: "CASCADE", onUpdate: "CASCADE" });
     }
   }
   Product.init({

@@ -1,90 +1,54 @@
-const { UserInputError } = require('apollo-server-express');
-const { Invoice, User, Branch, PaymentMethod, InvoiceItem,UserCompany } = require('../../models');
+const { User, UserCompany, Branch, PaymentMethod, InvoiceItem, Invoice } =  require('../../models'); 
 
-const InvoiceResolvers = {
+const resolvers = {
   Query: {
-    getInvoice: async (_, { id }) => {
-      const invoice = await Invoice.findByPk(id, {
-        include: [
-          { model: User, as: 'user' }, 
-          { model: UserCompany, as: 'companies' }, 
-          { model: Branch, as: 'branch' }, 
-          { model: PaymentMethod, as: 'paymentMethod' }, 
-          InvoiceItem
-        ],
-      });
-
-      if (!invoice) {
-        throw new UserInputError(`Invoice with id ${id} not found`);
-      }
-
-      return invoice;
+    async getInvoice(_, { id }) {
+      return await Invoice.findByPk(id);
     },
-    getInvoices: async () => {
-      const invoices = await Invoice.findAll({
-        include: [
-          { model: User, as: 'user' }, 
-          { model: UserCompany, as: 'companies' },
-          { model: Branch, as: 'branch' }, 
-          { model: PaymentMethod, as: 'paymentMethod' }, 
-          InvoiceItem
-        ],
-      });
-    
-      // Filtrar facturas sin usuario asociado
-      const invoicesWithUser = invoices.filter(invoice => invoice.user !== null);
-    
-      return invoicesWithUser;
-    },
+    async getAllInvoices() {
+      return await Invoice.findAll();
+    }
   },
   Mutation: {
-    createInvoice: async (_, { input }) => {
-      const { userId, branchId, companyId, paymentMethodId, total, tax, status } = input;
-      const user = await User.findByPk(userId);
-      if (!user) {
-        throw new UserInputError(`User with id ${userId} not found`);
-      }
-      const branch = await Branch.findByPk(branchId);
-      if (!branch) {
-        throw new UserInputError(`Branch with id ${branchId} not found`);
-      }
-      const paymentMethod = await PaymentMethod.findByPk(paymentMethodId);
-      if (!paymentMethod) {
-        throw new UserInputError(`Payment method with id ${paymentMethodId} not found`);
-      }
-      let userCompany = null;
-      if (companyId) {
-        userCompany = await UserCompany.findOne({ where: { userId: userId, companyId: companyId } });
-        if (!userCompany) {
-          throw new UserInputError(`UserCompany with user id ${userId} and company id ${companyId} not found`);
-        }
-      }
-      
-  
-      return await Invoice.reload({
-        include: [User, UserCompany, Branch, PaymentMethod, InvoiceItem],
-      });
+    async createInvoice(_, { input }) {
+      const newInvoice = await Invoice.create(input);
+      return newInvoice;
     },
-    updateInvoice: async (_, { id, input }) => {
-      const { total, tax, status } = input;
-      const invoice = await Invoice.findByPk(id);
-      if (!invoice) {
-        throw new UserInputError(`Invoice with id ${id} not found`);
-      }
-      const updatedInvoice = await invoice.update({ total, tax, status });
-      return await updatedInvoice.reload({
-        include: [User, UserCompany, Branch, PaymentMethod, InvoiceItem],
-      });
+    async updateInvoice(_, { id, input }) {
+      await Invoice.update(input, { where: { id } });
+      return await Invoice.findByPk(id);
     },
-    deleteInvoice: async (_, { id }) => {
-      const invoice = await Invoice.findByPk(id);
-      if (!invoice) {
-        throw new UserInputError(`Invoice with id ${id} not found`);
-      }
-      await invoice.destroy();
-      return true;
+    async deleteInvoice(_, { id }) {
+      return await Invoice.destroy({ where: { id } });
+    },
+  },
+  Invoice: {
+    user: async (invoice) => {
+      return await User.findByPk(invoice.userId);
+    },
+    companies: async (invoice) => {
+      const userCompanies = await UserCompany.findAll({
+        where: { userId: invoice.userId, companyId: invoice.companyId }
+      });
+    
+      const companies = await Promise.all(userCompanies.map(async userCompany => {
+        const company = await userCompany.getCompanys();
+        return company;
+      }));
+    
+      return companies;
+    },
+    
+    branch: async (invoice) => {
+      return await Branch.findByPk(invoice.branchId);
+    },
+    paymentMethod: async (invoice) => {
+      return await PaymentMethod.findByPk(invoice.paymentMethodId);
+    },
+    invoiceItems: async (invoice) => {
+      return await InvoiceItem.findAll({ where: { invoiceId: invoice.id } });
     },
   },
 };
 
-module.exports = InvoiceResolvers;
+module.exports = resolvers;

@@ -11,6 +11,11 @@ const InvoiceItemResolvers = {
       return invoiceItem;
     },
   },
+  InvoiceItem: {
+    product: async (invoiceItem) => {
+      return await invoiceItem.getProduct();
+    },
+  },
   Mutation: {
     createInvoiceItem: async (parent, { input }) => {
       const newInvoiceItem = await InvoiceItem.create(input);

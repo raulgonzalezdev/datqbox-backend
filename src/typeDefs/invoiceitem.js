@@ -7,6 +7,7 @@ const InvoiceItemTypeDefs = gql`
     productId: Int!
     quantity: Int!
     price: Float!
+    product: Product
   }
 
   input InvoiceItemInput {
