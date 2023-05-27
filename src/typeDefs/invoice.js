@@ -10,8 +10,11 @@ const typeDefs = gql`
     branch: Branch
     paymentMethod: PaymentMethod
     invoiceItems: [InvoiceItem]
+    taxInvoices: [TaxInvoice] 
     total: Float
     tax: Float
+    currency: CurrencyType
+    exchangeRate: ExchangeRate
     status: String
     createdAt: Date
     updatedAt: Date
@@ -30,6 +33,8 @@ const typeDefs = gql`
     total: Float
     tax: Float
     status: String
+    currencyId: ID
+    exchangeRateId: ID
   }
 
   type Mutation {

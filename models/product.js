@@ -18,6 +18,7 @@ module.exports = (sequelize, DataTypes) => {
   this.hasMany(models.InvoiceItem, { foreignKey: "productId", onDelete: "CASCADE", onUpdate: "CASCADE" });
   this.hasMany(models.ProductColor, { foreignKey: "ProductId", onDelete: "CASCADE", onUpdate: "CASCADE" });
   this.hasMany(models.ProductSize, { foreignKey: "ProductId", onDelete: "CASCADE", onUpdate: "CASCADE" });
+  this.belongsTo(models.CurrencyType, { foreignKey: "currencyTypeId", onDelete: "CASCADE", onUpdate: "CASCADE" });
     }
   }
   Product.init({
@@ -32,7 +33,8 @@ module.exports = (sequelize, DataTypes) => {
     rentalType: DataTypes.STRING,
     featured: DataTypes.BOOLEAN,
     newarrivals: DataTypes.BOOLEAN,
-    taxRate: DataTypes.FLOAT
+    taxRate: DataTypes.FLOAT,
+    currencyTypeId: DataTypes.INTEGER,
   }, {
     sequelize,
     modelName: 'Product',

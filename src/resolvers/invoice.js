@@ -1,4 +1,4 @@
-const { User, UserCompany, Branch, PaymentMethod, InvoiceItem, Invoice } =  require('../../models'); 
+const { User, UserCompany, Branch, PaymentMethod, InvoiceItem, Invoice, CurrencyType, ExchangeRate } =  require('../../models'); 
 
 const resolvers = {
   Query: {
@@ -6,13 +6,30 @@ const resolvers = {
       return await Invoice.findByPk(id);
     },
     async getAllInvoices() {
-      return await Invoice.findAll();
+      return await Invoice.findAll({
+        order: [
+          ['createdAt', 'DESC'],
+          ['id', 'DESC']
+        ]
+      });
     }
   },
   Mutation: {
     async createInvoice(_, { input }) {
-      const newInvoice = await Invoice.create(input);
-      return newInvoice;
+      try {
+        // Validación de entrada
+        if (!input.userId || !input.branchId || !input.paymentMethodId) {
+          throw new Error('Input inválido');
+        }
+  
+        // Crear la factura
+        const newInvoice = await Invoice.create(input);
+  
+        return newInvoice;
+      } catch (error) {
+        console.error(error);
+        throw new Error('Error al crear la factura');
+      }
     },
     async updateInvoice(_, { id, input }) {
       await Invoice.update(input, { where: { id } });
@@ -48,7 +65,15 @@ const resolvers = {
     invoiceItems: async (invoice) => {
       return await InvoiceItem.findAll({ where: { invoiceId: invoice.id } });
     },
+    taxInvoices: async (invoice) => await invoice.getTaxInvoices(), 
+    currency: async (invoice) => {
+      return await CurrencyType.findByPk(invoice.currencyId);
+    },
+    exchangeRate: async (invoice) => {
+      return await ExchangeRate.findByPk(invoice.exchangeRateId);
+    },
   },
+  
 };
 
 module.exports = resolvers;

@@ -34,6 +34,10 @@ const SizeTypeDefs = require("./src/typeDefs/size");
 const UserTypeDefs = require("./src/typeDefs/user");
 const UserCompanyTypeDefs = require("./src/typeDefs/usercompany");
 const UploadTypeDefs = require("./src/typeDefs/Upload");
+const taxTypeDefs = require("./src/typeDefs/Tax");
+const taxInvoiceTypeDefs = require("./src/typeDefs/TaxInvoice");
+const ExchangeRateTypeDefs = require("./src/typeDefs/ExchangeRate");
+const CurrencyTypeTypeDefs = require("./src/typeDefs/CurrencyType");
 
 // Import resolvers
 const AddressResolvers = require("./src/resolvers/Address");
@@ -57,6 +61,10 @@ const SizeResolvers = require("./src/resolvers/size");
 const UserResolvers = require("./src/resolvers/user");
 const UserCompanyResolvers = require("./src/resolvers/usercompany");
 const UploadReolvers = require("./src/resolvers/Upload");
+const taxResolvers = require("./src/resolvers/Tax");
+const taxInvoiceResolvers = require("./src/resolvers/TaxInvoice");
+const CurrencyTypeResolvers = require("./src/resolvers/CurrencyType");
+const ExchangeRateResolvers = require("./src/resolvers/ExchangeRate");
 
 // Combine typeDefs
 const typeDefs = gql`
@@ -81,6 +89,11 @@ const typeDefs = gql`
   ${UserTypeDefs}
   ${UserCompanyTypeDefs}
   ${UploadTypeDefs}
+  ${taxTypeDefs}
+  ${taxInvoiceTypeDefs}
+  ${ExchangeRateTypeDefs}
+  ${CurrencyTypeTypeDefs}
+
 
   `;
 
@@ -106,7 +119,11 @@ const resolvers = merge(
   SizeResolvers,
   UserResolvers,
   UserCompanyResolvers,
-  UploadReolvers
+  UploadReolvers,
+  taxResolvers,
+  taxInvoiceResolvers,
+  CurrencyTypeResolvers,
+  ExchangeRateResolvers,
 
 );
 
