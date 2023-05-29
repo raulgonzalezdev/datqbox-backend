@@ -1,4 +1,4 @@
-const { Product, Category, Image, Review, OrderItem, Color, Size, ProductColor, ProductSize } = require("../../models");
+const { Product, Category, Image, Review, OrderItem, Color, Size, ProductColor, ProductSize, ExchangeRate, CompositeProductItems, ProductCosts } = require("../../models");
 
 
 const ProductResolvers = {
@@ -6,6 +6,10 @@ const ProductResolvers = {
     products: async () => {
       const products = await Product.findAll({
         include: [Category, Image, Review, OrderItem, ProductColor, ProductSize],
+        order: [
+          [Category, 'name', 'ASC'],
+          ['id', 'ASC'],
+        ],
       });
       return products;
     },
@@ -55,6 +59,27 @@ const ProductResolvers = {
     productSizes: async (product) => {
       const productSizes = await ProductSize.findAll({ where: { ProductId: product.id } });
       return productSizes;
+    },
+    exchangeRate: async (product) => {
+      // Find the most recent exchange rate for the product's currency
+      const exchangeRate = await ExchangeRate.findOne({
+        where: { currencyId: product.exchangeRateId },
+        order: [['date', 'DESC']]
+      });
+
+      return exchangeRate;
+    },
+    mainProducts: async (product) => {
+      const mainProducts = await CompositeProductItems.findAll({ where: { mainProductId: product.id } });
+      return mainProducts;
+    },
+    includedProducts: async (product) => {
+      const includedProducts = await CompositeProductItems.findAll({ where: { includedProductId: product.id } });
+      return includedProducts;
+    },
+    productCosts: async (product) => {
+      const productCosts = await ProductCosts.findOne({ where: { productId: product.id } });
+      return productCosts;
     },
   },
 };

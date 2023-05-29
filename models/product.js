@@ -18,23 +18,39 @@ module.exports = (sequelize, DataTypes) => {
   this.hasMany(models.InvoiceItem, { foreignKey: "productId", onDelete: "CASCADE", onUpdate: "CASCADE" });
   this.hasMany(models.ProductColor, { foreignKey: "ProductId", onDelete: "CASCADE", onUpdate: "CASCADE" });
   this.hasMany(models.ProductSize, { foreignKey: "ProductId", onDelete: "CASCADE", onUpdate: "CASCADE" });
-  this.belongsTo(models.CurrencyType, { foreignKey: "currencyTypeId", onDelete: "CASCADE", onUpdate: "CASCADE" });
+  this.belongsTo(models.ExchangeRate, { foreignKey: "exchangeRateId", onDelete: "CASCADE", onUpdate: "CASCADE" });
+  this.hasOne(models.ProductCosts, { foreignKey: 'productId', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+this.hasMany(models.CompositeProductItems, { as: 'mainProducts', foreignKey: 'mainProductId' });
+this.hasMany(models.CompositeProductItems, { as: 'includedProducts', foreignKey: 'includedProductId' });
+
     }
   }
   Product.init({
-    name: DataTypes.STRING,
-    vendor: DataTypes.STRING,
-    description: DataTypes.STRING,
-    image: DataTypes.STRING,
-    price: DataTypes.FLOAT,
     sku: DataTypes.STRING,
     categoryId: DataTypes.INTEGER,
+    name: DataTypes.STRING,
+    description: DataTypes.STRING,
+    unit: DataTypes.STRING,
+    image: DataTypes.STRING,
+    price: DataTypes.FLOAT,
     inventory: DataTypes.FLOAT,
     rentalType: DataTypes.STRING,
     featured: DataTypes.BOOLEAN,
+    taxInclued: DataTypes.BOOLEAN,
+    taxInclued: DataTypes.BOOLEAN,
     newarrivals: DataTypes.BOOLEAN,
     taxRate: DataTypes.FLOAT,
-    currencyTypeId: DataTypes.INTEGER,
+    exchangeRateId: DataTypes.INTEGER,
+    requiresPrescription: DataTypes.BOOLEAN,
+    expirationDate: DataTypes.DATE,
+    dosage: DataTypes.STRING,
+    usageInstructions: DataTypes.STRING,
+    contraindications: DataTypes.STRING,
+    activeIngredient: DataTypes.STRING,
+    vendor: DataTypes.STRING,
+    isComposite: DataTypes.BOOLEAN,
+
+    
   }, {
     sequelize,
     modelName: 'Product',

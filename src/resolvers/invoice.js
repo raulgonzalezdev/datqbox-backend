@@ -66,9 +66,9 @@ const resolvers = {
       return await InvoiceItem.findAll({ where: { invoiceId: invoice.id } });
     },
     taxInvoices: async (invoice) => await invoice.getTaxInvoices(), 
-    currency: async (invoice) => {
-      return await CurrencyType.findByPk(invoice.currencyId);
-    },
+    // currency: async (invoice) => {
+    //   return await CurrencyType.findByPk(invoice.currencyId);
+    // },
     exchangeRate: async (invoice) => {
       return await ExchangeRate.findByPk(invoice.exchangeRateId);
     },

@@ -3,23 +3,38 @@ const { gql } = require("apollo-server");
 const ProductTypeDefs = gql`
   type Product {
     id: ID!
-    name: String!
-    vendor: String!
     sku: String!
+    categoryId: ID!
+    name: String!
     description: String!
+    unit: String
     image: String!
     price: Float!
-    category: Category!
     inventory: Float!
     rentalType: String!
     featured: Boolean!
+    taxInclued: Boolean
     newarrivals: Boolean!
     taxRate: Float!
+    exchangeRateId: ID!
+    requiresPrescription: Boolean
+    expirationDate: String
+    dosage: String
+    usageInstructions: String
+    contraindications: String
+    activeIngredient: String
+    vendor: String!
+    category: Category!
     images: [Image!]!
     reviews: [Review!]!
     orderItems: [OrderItem!]!
     productColors: [ProductColor!]!
     productSizes: [ProductSize!]!
+    exchangeRate: ExchangeRate
+    isComposite: Boolean
+    mainProducts: [CompositeProductItems!]
+    includedProducts: [CompositeProductItems!]
+    productCosts: ProductCosts
   }
 
   type ProductColor {
@@ -31,33 +46,53 @@ const ProductTypeDefs = gql`
   }
 
   input CreateProductInput {
-    name: String!
-    vendor: String!
-    description: String!
     sku: String!
+    categoryId: ID!
+    name: String!
+    description: String!
+    unit: String
     image: String!
     price: Float!
-    categoryId: ID!
     inventory: Float!
     rentalType: String!
     featured: Boolean!
+    taxInclued: Boolean
     newarrivals: Boolean!
     taxRate: Float!
+    exchangeRateId: ID!
+    requiresPrescription: Boolean!
+    expirationDate: String
+    dosage: String
+    usageInstructions: String
+    contraindications: String
+    activeIngredient: String
+    vendor: String!
+    isComposite: Boolean
   }
 
   input UpdateProductInput {
-    name: String
-    vendor: String
     sku: String
-    image: String
-    description: String!
-    price: Float
     categoryId: ID
+    name: String
+    description: String
+    unit: String
+    image: String
+    price: Float
     inventory: Float
     rentalType: String
     featured: Boolean
+    taxInclued: Boolean
     newarrivals: Boolean
     taxRate: Float
+    exchangeRateId: ID
+    requiresPrescription: Boolean
+    expirationDate: String
+    dosage: String
+    usageInstructions: String
+    contraindications: String
+    activeIngredient: String
+    vendor: String
+    isComposite: Boolean
   }
 
   extend type Query {

@@ -13,7 +13,6 @@ const typeDefs = gql`
     taxInvoices: [TaxInvoice] 
     total: Float
     tax: Float
-    currency: CurrencyType
     exchangeRate: ExchangeRate
     status: String
     createdAt: Date
@@ -33,7 +32,6 @@ const typeDefs = gql`
     total: Float
     tax: Float
     status: String
-    currencyId: ID
     exchangeRateId: ID
   }
 

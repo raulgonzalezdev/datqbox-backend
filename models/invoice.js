@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
       this.hasMany(models.InvoiceItem, { foreignKey: 'invoiceId', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
       this.hasMany(models.TaxInvoice, { foreignKey: 'invoiceId', onDelete: 'CASCADE', onUpdate: 'CASCADE' }); 
       this.belongsTo(models.ExchangeRate, { foreignKey: "exchangeRateId", onDelete: "CASCADE", onUpdate: "CASCADE" });
-      this.belongsTo(models.CurrencyType, { foreignKey: "currencyId", onDelete: "CASCADE", onUpdate: "CASCADE" });
+      // this.belongsTo(models.CurrencyType, { foreignKey: "currencyId", onDelete: "CASCADE", onUpdate: "CASCADE" });
     }
   }
   Invoice.init({
@@ -45,7 +45,7 @@ module.exports = (sequelize, DataTypes) => {
     total: DataTypes.FLOAT,
     tax: DataTypes.FLOAT,
     status: DataTypes.STRING,
-    currencyId: DataTypes.INTEGER,
+    // currencyId: DataTypes.INTEGER,
     exchangeRateId: DataTypes.INTEGER,
   }, {
     sequelize,
