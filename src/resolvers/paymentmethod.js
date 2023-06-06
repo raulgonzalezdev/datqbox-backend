@@ -1,6 +1,5 @@
 const { PaymentMethod } = require('../../models');
 
-
 const PaymentMethodResolvers = {
   Query: {
     paymentMethods: async () => {
@@ -28,9 +27,14 @@ const PaymentMethodResolvers = {
       }
       await paymentMethod.destroy();
       return true;
-    }
-    
-  }
+    },
+  },
+  PaymentMethod: {
+    invoices: async (paymentMethod) => {
+      return await paymentMethod.getInvoices();
+    },
+  },
 };
 
 module.exports = PaymentMethodResolvers;
+

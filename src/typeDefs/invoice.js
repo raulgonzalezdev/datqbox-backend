@@ -8,7 +8,7 @@ const typeDefs = gql`
     user: User
     companies: [Company]
     branch: Branch
-    paymentMethod: PaymentMethod
+    paymentMethods: [PaymentMethod]
     invoiceItems: [InvoiceItem]
     taxInvoices: [TaxInvoice] 
     total: Float
@@ -28,7 +28,7 @@ const typeDefs = gql`
     userId: ID!
     companyId: ID!
     branchId: ID!
-    paymentMethodId: ID!
+    paymentMethodIds: [ID!]
     total: Float
     tax: Float
     status: String

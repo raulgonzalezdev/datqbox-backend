@@ -3,9 +3,13 @@ const { gql } = require('apollo-server');
 const productCostsTypeDefs = gql`
 type ProductCosts {
     id: ID!
+    productId: ID!
     purchaseCost: Float!
     shippingCost: Float!
     otherCosts: Float!
+    taxRateCosts: Float
+    isTaxedCost: Boolean
+    calcMethod: String
     product: Product!
   }
   
@@ -13,12 +17,19 @@ type ProductCosts {
     purchaseCost: Float!
     shippingCost: Float!
     otherCosts: Float!
+    taxRateCosts: Float
+    isTaxedCost: Boolean
+    calcMethod: String
     productId: ID!
   }
   
   input UpdateProductCostsInput {
+    productId: ID
     purchaseCost: Float
     shippingCost: Float
+    taxRateCosts: Float
+    isTaxedCost: Boolean
+    calcMethod: String
     otherCosts: Float
   }
   

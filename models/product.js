@@ -33,6 +33,7 @@ this.hasMany(models.CompositeProductItems, { as: 'includedProducts', foreignKey:
     unit: DataTypes.STRING,
     image: DataTypes.STRING,
     price: DataTypes.FLOAT,
+    profit: DataTypes.FLOAT,
     inventory: DataTypes.FLOAT,
     rentalType: DataTypes.STRING,
     featured: DataTypes.BOOLEAN,

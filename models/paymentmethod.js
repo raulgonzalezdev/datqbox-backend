@@ -10,12 +10,14 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      this.hasMany(models.Invoice, { foreignKey: 'paymentMethodId' });
+      this.belongsToMany(models.Invoice, { through: models.InvoicePaymentMethod, foreignKey: 'paymentMethodId', otherKey: 'invoiceId', as: 'invoices' });
+
     }
   }
   PaymentMethod.init({
     name: DataTypes.STRING,
-    description: DataTypes.STRING
+    description: DataTypes.STRING,
+    image: DataTypes.STRING,
   }, {
     sequelize,
     modelName: 'PaymentMethod',

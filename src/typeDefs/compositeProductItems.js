@@ -23,11 +23,12 @@ type CompositeProductItems {
   extend type Query {
     compositeProductItems: [CompositeProductItems!]!
     compositeProductItem(id: ID!): CompositeProductItems
+    compositeProducts(mainProductId: ID!): [CompositeProductItems]
   }
   
   extend type Mutation {
     createCompositeProductItems(input: CreateCompositeProductItemsInput!): CompositeProductItems!
-    updateCompositeProductItems(id: ID!, input: UpdateCompositeProductItemsInput!): CompositeProductItems!
+    updateCompositeProductItems(mainProductId: ID!, includedProductId: ID!, input: UpdateCompositeProductItemsInput!): CompositeProductItems
     deleteCompositeProductItems(id: ID!): Boolean!
   }
   

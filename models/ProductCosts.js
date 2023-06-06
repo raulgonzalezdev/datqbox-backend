@@ -12,6 +12,9 @@ module.exports = (sequelize, DataTypes) => {
     purchaseCost: DataTypes.FLOAT,
     shippingCost: DataTypes.FLOAT,
     otherCosts: DataTypes.FLOAT,
+    taxRateCosts: DataTypes.FLOAT,
+    isTaxedCost: DataTypes.BOOLEAN,
+    calcMethod: DataTypes.STRING,
     productId: DataTypes.INTEGER,
   }, {
     sequelize,

@@ -18,7 +18,8 @@ module.exports = (sequelize, DataTypes) => {
 
 
       this.belongsTo(models.Branch, { foreignKey: 'branchId', onDelete: 'CASCADE', onUpdate: 'CASCADE', as: 'branch' });  
-      this.belongsTo(models.PaymentMethod, { foreignKey: 'paymentMethodId', onDelete: 'CASCADE', onUpdate: 'CASCADE', as: 'paymentMethod' });
+      this.belongsToMany(models.PaymentMethod, { through: models.InvoicePaymentMethod, foreignKey: 'invoiceId', otherKey: 'paymentMethodId', as: 'paymentMethods' });
+
       this.hasMany(models.InvoiceItem, { foreignKey: 'invoiceId', onDelete: 'CASCADE', onUpdate: 'CASCADE' });
       this.hasMany(models.TaxInvoice, { foreignKey: 'invoiceId', onDelete: 'CASCADE', onUpdate: 'CASCADE' }); 
       this.belongsTo(models.ExchangeRate, { foreignKey: "exchangeRateId", onDelete: "CASCADE", onUpdate: "CASCADE" });
@@ -38,10 +39,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,  // establece que este campo es requerido
     },
-    paymentMethodId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,  // establece que este campo es requerido
-    },
+
     total: DataTypes.FLOAT,
     tax: DataTypes.FLOAT,
     status: DataTypes.STRING,

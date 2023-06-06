@@ -10,6 +10,7 @@ const ProductTypeDefs = gql`
     unit: String
     image: String!
     price: Float!
+    profit: Float
     inventory: Float!
     rentalType: String!
     featured: Boolean!
@@ -53,6 +54,7 @@ const ProductTypeDefs = gql`
     unit: String
     image: String!
     price: Float!
+    profit: Float
     inventory: Float!
     rentalType: String!
     featured: Boolean!
@@ -78,6 +80,7 @@ const ProductTypeDefs = gql`
     unit: String
     image: String
     price: Float
+    profit: Float
     inventory: Float
     rentalType: String
     featured: Boolean

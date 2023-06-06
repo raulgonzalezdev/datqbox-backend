@@ -5,11 +5,14 @@ const PaymentMethodTypeDefs = gql`
     id: ID!
     name: String!
     description: String!
+    image: String
+    invoices: [Invoice]!
   }
 
   input PaymentMethodInput {
     name: String!
     description: String!
+    image: String
   }
 
   type Query {
@@ -25,5 +28,6 @@ const PaymentMethodTypeDefs = gql`
 `;
 
 module.exports = PaymentMethodTypeDefs;
+
 
   

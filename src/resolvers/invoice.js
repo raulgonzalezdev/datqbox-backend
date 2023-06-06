@@ -1,6 +1,6 @@
 const { User, UserCompany, Branch, PaymentMethod, InvoiceItem, Invoice, CurrencyType, ExchangeRate } =  require('../../models'); 
 
-const resolvers = {
+const InvoiceResolvers = {
   Query: {
     async getInvoice(_, { id }) {
       return await Invoice.findByPk(id);
@@ -15,21 +15,20 @@ const resolvers = {
     }
   },
   Mutation: {
-    async createInvoice(_, { input }) {
-      try {
-        // Validación de entrada
-        if (!input.userId || !input.branchId || !input.paymentMethodId) {
-          throw new Error('Input inválido');
+     createInvoice: async (parent, { input }) => {
+      const newInvoice = await Invoice.create(input);
+  
+      if (input.paymentMethodIds) {
+        for (let i = 0; i < input.paymentMethodIds.length; i++) {
+          const paymentMethod = await PaymentMethod.findByPk(input.paymentMethodIds[i]);
+          if (!paymentMethod) {
+            throw new Error(`No se encontró el método de pago con id ${input.paymentMethodIds[i]}`);
+          }
+          await newInvoice.addPaymentMethod(paymentMethod);
         }
-  
-        // Crear la factura
-        const newInvoice = await Invoice.create(input);
-  
-        return newInvoice;
-      } catch (error) {
-        console.error(error);
-        throw new Error('Error al crear la factura');
       }
+  
+      return newInvoice;
     },
     async updateInvoice(_, { id, input }) {
       await Invoice.update(input, { where: { id } });
@@ -59,8 +58,9 @@ const resolvers = {
     branch: async (invoice) => {
       return await Branch.findByPk(invoice.branchId);
     },
-    paymentMethod: async (invoice) => {
-      return await PaymentMethod.findByPk(invoice.paymentMethodId);
+
+    paymentMethods: async (invoice) => {
+      return await invoice.getPaymentMethods();
     },
     invoiceItems: async (invoice) => {
       return await InvoiceItem.findAll({ where: { invoiceId: invoice.id } });
@@ -76,4 +76,4 @@ const resolvers = {
   
 };
 
-module.exports = resolvers;
+module.exports = InvoiceResolvers;

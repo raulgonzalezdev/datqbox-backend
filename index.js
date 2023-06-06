@@ -40,6 +40,7 @@ const ExchangeRateTypeDefs = require("./src/typeDefs/ExchangeRate");
 const CurrencyTypeTypeDefs = require("./src/typeDefs/CurrencyType");
 const CompositeProductItemsTypeDefs = require("./src/typeDefs/compositeProductItems")
 const productCostsTypeDefs = require("./src/typeDefs/productCosts")
+const InvoicePaymentMethodTypeDefs = require("./src/typeDefs/InvoicePaymentMethod")
 
 // Import resolvers
 const AddressResolvers = require("./src/resolvers/Address");
@@ -69,6 +70,7 @@ const CurrencyTypeResolvers = require("./src/resolvers/CurrencyType");
 const ExchangeRateResolvers = require("./src/resolvers/ExchangeRate");
 const compositeProductItemsResolvers = require("./src/resolvers/compositeProductItems")
 const productCostsResolvers = require("./src/resolvers/productCosts")
+//const InvoicePaymentMethodResolvers = require("./src/resolvers/InvoicePaymentMethod")
 
 // Combine typeDefs
 const typeDefs = gql`
@@ -99,6 +101,7 @@ const typeDefs = gql`
   ${CurrencyTypeTypeDefs}
   ${CompositeProductItemsTypeDefs}
   ${productCostsTypeDefs}
+  ${InvoicePaymentMethodTypeDefs}
 
 
   `;
@@ -132,6 +135,7 @@ const resolvers = merge(
   ExchangeRateResolvers,
   compositeProductItemsResolvers,
   productCostsResolvers,
+  //InvoicePaymentMethodResolvers,
 
 );
 
