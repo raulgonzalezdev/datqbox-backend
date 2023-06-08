@@ -14,6 +14,10 @@ module.exports = (sequelize, DataTypes) => {
     paymentMethodId: {
       type: DataTypes.INTEGER,
       allowNull: false
+    },
+    amount: {
+      type: DataTypes.FLOAT,
+      allowNull: true
     }
   }, {
     sequelize,

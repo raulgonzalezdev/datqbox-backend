@@ -6,6 +6,7 @@ const taxInvoiceTypeDefs = gql`
     invoiceId: Int!
     taxId: Int!
     amount: Float!
+    subtotal: Float!
     tax: Tax
     invoice: Invoice
   }
@@ -14,6 +15,7 @@ const taxInvoiceTypeDefs = gql`
     invoiceId: Int
     taxId: Int
     amount: Float
+    subtotal: Float
   }
 
   extend type Query {
@@ -22,7 +24,7 @@ const taxInvoiceTypeDefs = gql`
   }
 
   extend type Mutation {
-    addTaxInvoice(invoiceId: Int!, taxId: Int!, amount: Float!): TaxInvoice
+    addTaxInvoice(invoiceId: Int!, taxId: Int!, amount: Float!, subtotal: Float!): TaxInvoice
     updateTaxInvoice(id: ID!, input: TaxInvoiceInput): TaxInvoice
     deleteTaxInvoice(id: ID!): ID!
   }

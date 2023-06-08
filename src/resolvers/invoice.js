@@ -1,4 +1,4 @@
-const { User, UserCompany, Branch, PaymentMethod, InvoiceItem, Invoice, CurrencyType, ExchangeRate } =  require('../../models'); 
+const { User, UserCompany, Branch, PaymentMethod, InvoiceItem, Invoice, CurrencyType, ExchangeRate, InvoicePaymentMethod } =  require('../../models'); 
 
 const InvoiceResolvers = {
   Query: {
@@ -64,6 +64,9 @@ const InvoiceResolvers = {
     },
     invoiceItems: async (invoice) => {
       return await InvoiceItem.findAll({ where: { invoiceId: invoice.id } });
+    },
+    invoicePaymentMethods: async (invoice) => {
+      return await InvoicePaymentMethod.findAll({ where: { invoiceId: invoice.id } });
     },
     taxInvoices: async (invoice) => await invoice.getTaxInvoices(), 
     // currency: async (invoice) => {

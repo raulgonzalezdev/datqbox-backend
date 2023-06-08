@@ -7,7 +7,7 @@ const taxInvoiceResolvers = {
   },
 
   Mutation: {
-    addTaxInvoice: async (_, { invoiceId, taxId, amount }) => await TaxInvoice.create({ invoiceId, taxId, amount }),
+    addTaxInvoice: async (_, { invoiceId, taxId, amount, subtotal }) => await TaxInvoice.create({ invoiceId, taxId, amount,subtotal }),
     updateTaxInvoice: async (_, { id, input }) => {
       await TaxInvoice.update(input, { where: { id } });
       return await TaxInvoice.findByPk(id);

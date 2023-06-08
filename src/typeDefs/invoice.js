@@ -9,10 +9,10 @@ const typeDefs = gql`
     companies: [Company]
     branch: Branch
     paymentMethods: [PaymentMethod]
+    invoicePaymentMethods: [InvoicePaymentMethod]
     invoiceItems: [InvoiceItem]
     taxInvoices: [TaxInvoice] 
     total: Float
-    tax: Float
     exchangeRate: ExchangeRate
     status: String
     createdAt: Date
@@ -30,7 +30,6 @@ const typeDefs = gql`
     branchId: ID!
     paymentMethodIds: [ID!]
     total: Float
-    tax: Float
     status: String
     exchangeRateId: ID
   }

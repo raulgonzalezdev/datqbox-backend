@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     companyId: {
       type: DataTypes.INTEGER,
-      allowNull: false,  // este campo puede ser nulo porque un usuario puede no tener una compañía
+      allowNull: false, 
     },
     branchId: {
       type: DataTypes.INTEGER,
@@ -41,9 +41,7 @@ module.exports = (sequelize, DataTypes) => {
     },
 
     total: DataTypes.FLOAT,
-    tax: DataTypes.FLOAT,
     status: DataTypes.STRING,
-    // currencyId: DataTypes.INTEGER,
     exchangeRateId: DataTypes.INTEGER,
   }, {
     sequelize,

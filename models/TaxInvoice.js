@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     invoiceId: DataTypes.INTEGER,
     taxId: DataTypes.INTEGER,
     amount: DataTypes.FLOAT,
+    subtotal: DataTypes.FLOAT,
   }, {
     sequelize,
     modelName: 'TaxInvoice',

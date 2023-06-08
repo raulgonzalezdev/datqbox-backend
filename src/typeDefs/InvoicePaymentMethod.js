@@ -4,6 +4,7 @@ const InvoicePaymentMethodTypeDefs = gql`
 type InvoicePaymentMethod {
   invoiceId: ID!
   paymentMethodId: ID!
+  amount: Float
   invoice: Invoice
   paymentMethod: PaymentMethod
 }
@@ -12,6 +13,7 @@ type InvoicePaymentMethod {
   input InvoicePaymentMethodInput {
     invoiceId: ID!
     paymentMethodId: ID!
+    amount: Float
   }
   
   extend type Mutation {
