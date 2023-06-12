@@ -1,21 +1,36 @@
+const client = require('../redis/redisClient');
 const { User, UserCompany, Branch, PaymentMethod, InvoiceItem, Invoice, CurrencyType, ExchangeRate, InvoicePaymentMethod } =  require('../../models'); 
 
 const InvoiceResolvers = {
   Query: {
     async getInvoice(_, { id }) {
-      return await Invoice.findByPk(id);
+      let invoice = await client.get(`invoice:${id}`);
+      if (!invoice) {
+        invoice = await Invoice.findByPk(id);
+        await client.set(`invoice:${id}`, JSON.stringify(invoice));
+      } else {
+        invoice = JSON.parse(invoice);
+      }
+      return invoice;
     },
     async getAllInvoices() {
-      return await Invoice.findAll({
-        order: [
-          ['createdAt', 'DESC'],
-          ['id', 'DESC']
-        ]
-      });
+      let invoices = await client.get('invoices');
+      if (!invoices) {
+        invoices = await Invoice.findAll({
+          order: [
+            ['createdAt', 'DESC'],
+            ['id', 'DESC']
+          ]
+        });
+        await client.set('invoices', JSON.stringify(invoices));
+      } else {
+        invoices = JSON.parse(invoices);
+      }
+      return invoices;
     }
   },
   Mutation: {
-     createInvoice: async (parent, { input }) => {
+    createInvoice: async (parent, { input }) => {
       const newInvoice = await Invoice.create(input);
   
       if (input.paymentMethodIds) {
@@ -27,15 +42,23 @@ const InvoiceResolvers = {
           await newInvoice.addPaymentMethod(paymentMethod);
         }
       }
-  
+      await client.del('invoices');
       return newInvoice;
     },
     async updateInvoice(_, { id, input }) {
       await Invoice.update(input, { where: { id } });
-      return await Invoice.findByPk(id);
+      const updatedInvoice = await Invoice.findByPk(id);
+      await client.del(`invoice:${id}`);
+      await client.del('invoices');
+      return updatedInvoice;
     },
     async deleteInvoice(_, { id }) {
-      return await Invoice.destroy({ where: { id } });
+      const deleted = await Invoice.destroy({ where: { id } });
+      if (deleted) {
+        await client.del(`invoice:${id}`);
+        await client.del('invoices');
+      }
+      return deleted;
     },
   },
   Invoice: {
@@ -69,9 +92,6 @@ const InvoiceResolvers = {
       return await InvoicePaymentMethod.findAll({ where: { invoiceId: invoice.id } });
     },
     taxInvoices: async (invoice) => await invoice.getTaxInvoices(), 
-    // currency: async (invoice) => {
-    //   return await CurrencyType.findByPk(invoice.currencyId);
-    // },
     exchangeRate: async (invoice) => {
       return await ExchangeRate.findByPk(invoice.exchangeRateId);
     },
@@ -80,3 +100,4 @@ const InvoiceResolvers = {
 };
 
 module.exports = InvoiceResolvers;
+

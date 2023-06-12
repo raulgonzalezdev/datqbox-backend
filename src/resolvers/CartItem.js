@@ -1,12 +1,19 @@
+const client = require('../redis/redisClient');
 const { CartItem, Cart, Product } = require('../../models');
 
 const CartItemResolvers = {
   Query: {
     getCartItems: async (parent, { cartId }) => {
-      const cartItems = await CartItem.findAll({
-        where: { cartId },
-        include: [{ model: Product }]
-      });
+      let cartItems = await client.get(`cartItems:${cartId}`);
+      if (!cartItems) {
+        cartItems = await CartItem.findAll({
+          where: { cartId },
+          include: [{ model: Product }]
+        });
+        await client.set(`cartItems:${cartId}`, JSON.stringify(cartItems));
+      } else {
+        cartItems = JSON.parse(cartItems);
+      }
       return cartItems;
     },
   },
@@ -21,6 +28,7 @@ const CartItemResolvers = {
         throw new Error(`Product with id ${productId} not found`);
       }
       const cartItem = await CartItem.create({ cartId, productId, quantity, price });
+      await client.del(`cartItems:${cartId}`);
       return cartItem;
     },
     updateCartItem: async (parent, { id, quantity }) => {
@@ -30,6 +38,7 @@ const CartItemResolvers = {
       }
       cartItem.quantity = quantity;
       await cartItem.save();
+      await client.del(`cartItems:${cartItem.cartId}`);
       return cartItem;
     },
     deleteCartItem: async (parent, { id }) => {
@@ -38,6 +47,7 @@ const CartItemResolvers = {
         throw new Error(`Cart item with id ${id} not found`);
       }
       await cartItem.destroy();
+      await client.del(`cartItems:${cartItem.cartId}`);
       return true;
     },
   },

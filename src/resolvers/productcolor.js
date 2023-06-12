@@ -1,49 +1,71 @@
-const { ProductColor, Color } = require('../../models'); // Asegúrate de importar Color aquí
+const client = require('../redis/redisClient');
+const { ProductColor, Color } = require('../../models');
 
 const ProductColorResolvers = {
   Query: {
     productColors: async () => {
-      const productColors = await ProductColor.findAll();
+      let productColors = await client.get('productColors');
+      if (!productColors) {
+        productColors = await ProductColor.findAll();
+        await client.set('productColors', JSON.stringify(productColors));
+      } else {
+        productColors = JSON.parse(productColors);
+      }
       return productColors;
     },
     getProductColorsByProductId: async (_, { productId }) => {
-      const productColors = await ProductColor.findAll({ where: { ProductId } });
+      let productColors = await client.get(`productColors:${productId}`);
+      if (!productColors) {
+        productColors = await ProductColor.findAll({ where: { productId } });
+        await client.set(`productColors:${productId}`, JSON.stringify(productColors));
+      } else {
+        productColors = JSON.parse(productColors);
+      }
       return productColors;
     },
   },
   Mutation: {
-    addProductColor: async (_, { ProductId, ColorId }) => {
-      const newProductColor = await ProductColor.create({ ProductId, ColorId });
-      if (!newProductColor.ProductId) {
+    addProductColor: async (_, { productId, colorId }) => {
+      const newProductColor = await ProductColor.create({ productId, colorId });
+      if (!newProductColor.productId) {
         throw new Error('ProductId not set on new ProductColor');
       }
+      await client.del('productColors');
+      await client.del(`productColors:${productId}`);
       return newProductColor;
     },
     removeProductColor: async (_, { input }) => {
-      const { ProductId } = input;
+      const { productId } = input;
       const deletedProductColor = await ProductColor.destroy({ 
         where: { 
-          ProductId: ProductId
-          
+          productId: productId
         } 
       });
+      await client.del('productColors');
+      await client.del(`productColors:${productId}`);
       return deletedProductColor > 0; // Returns true if a record was deleted, else false
     },
     addMultipleProductColors: async (_, { input }) => {
       const newProductColors = await ProductColor.bulkCreate(input);
+      await client.del('productColors');
+      input.forEach(item => {
+        client.del(`productColors:${item.productId}`);
+      });
       return newProductColors;
     },
-    
   },
   ProductColor: {
     color: async (productColor) => {
-      const color = await Color.findByPk(productColor.ColorId);
+      let color = await client.get(`color:${productColor.colorId}`);
+      if (!color) {
+        color = await Color.findByPk(productColor.colorId);
+        await client.set(`color:${productColor.colorId}`, JSON.stringify(color));
+      } else {
+        color = JSON.parse(color);
+      }
       return color;
     },
   },
 };
 
 module.exports = ProductColorResolvers;
-
-
-

@@ -1,37 +1,70 @@
-const { Product, Category, Image, Review, OrderItem, Color, Size, ProductColor, ProductSize, ExchangeRate, CompositeProductItems, ProductCosts } = require("../../models");
+const client = require('../redis/redisClient');
 
+const { Product, Category, Image, Review, OrderItem, Color, Size, ProductColor, ProductSize, ExchangeRate, CompositeProductItems, ProductCosts } = require("../../models");
 
 const ProductResolvers = {
   Query: {
     products: async () => {
-      const products = await Product.findAll({
-        include: [Category, Image, Review, OrderItem, ProductColor, ProductSize],
-        order: [
-          [Category, 'name', 'ASC'],
-          ['id', 'ASC'],
-        ],
-      });
-      return products;
+      try {
+        let products = await client.get('products');
+        
+        if (!products) {
+          products = await Product.findAll({
+            include: [Category, Image, Review, OrderItem, ProductColor, ProductSize],
+            order: [
+              [Category, 'name', 'ASC'],
+              ['id', 'ASC'],
+            ],
+          });
+         
+          await client.set('products', JSON.stringify(products));
+        } else {
+          products = JSON.parse(products);
+        }
+        return products;
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
     },
     product: async (_, { id }) => {
-      const product = await Product.findByPk(id, {
-        include: [Category, Image, Review, OrderItem, ProductColor, ProductSize],
-      });
-      return product;
+      try {
+        let product = await client.get(`product:${id}`);
+        if (!product) {
+          product = await Product.findByPk(id, {
+            include: [Category, Image, Review, OrderItem, ProductColor, ProductSize],
+          });
+          await client.set(`product:${id}`, JSON.stringify(product));
+        } else {
+          product = JSON.parse(product);
+        }
+        return product;
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
     },
   },
   Mutation: {
     createProduct: async (_, { input }) => {
       const product = await Product.create(input);
+      // Invalidate 'products' cache
+      client.del('products');
       return product;
     },
     updateProduct: async (_, { id, input }) => {
       await Product.update(input, { where: { id } });
       const updatedProduct = await Product.findByPk(id);
+      // Invalidate 'products' and specific 'product' cache
+      client.del(`product:${id}`);
+      client.del('products');
       return updatedProduct;
     },
     deleteProduct: async (_, { id }) => {
       await Product.destroy({ where: { id } });
+      // Invalidate 'products' and specific 'product' cache
+      client.del(`product:${id}`);
+      client.del('products');
       return true;
     },
   },

@@ -1,15 +1,21 @@
-// src/resolvers/Cart.js
+const client = require('../redis/redisClient');
 const { UserInputError } = require('apollo-server');
 const { Cart, CartItem, Product } = require('../../models');
 
 const CartResolvers = {
   Query: {
     getCart: async (_, { id }) => {
-      const cart = await Cart.findByPk(id, {
-        include: { model: CartItem, include: { model: Product } },
-      });
+      let cart = await client.get(`cart:${id}`);
       if (!cart) {
-        throw new UserInputError(`Cart with id ${id} not found`);
+        cart = await Cart.findByPk(id, {
+          include: { model: CartItem, include: { model: Product } },
+        });
+        if (!cart) {
+          throw new UserInputError(`Cart with id ${id} not found`);
+        }
+        await client.set(`cart:${id}`, JSON.stringify(cart));
+      } else {
+        cart = JSON.parse(cart);
       }
       return cart;
     },
@@ -29,6 +35,7 @@ const CartResolvers = {
         throw new UserInputError(`Product with id ${productId} not found`);
       }
       const cartItem = await CartItem.create({ cartId, productId, quantity, price });
+      await client.del(`cart:${cartId}`);
       return cartItem;
     },
     removeItemFromCart: async (_, { id }) => {
@@ -37,9 +44,11 @@ const CartResolvers = {
         throw new UserInputError(`CartItem with id ${id} not found`);
       }
       await cartItem.destroy();
+      await client.del(`cart:${cartItem.cartId}`);
       return cartItem;
     },
   },
 };
 
 module.exports = CartResolvers;
+
