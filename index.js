@@ -6,6 +6,8 @@ const { AuthenticationError } = require('apollo-server');
 const jwt = require('jsonwebtoken');
 
 
+
+
 const { merge } = require("lodash");
 const cors = require('cors');
 const path = require('path');
@@ -148,7 +150,9 @@ const server = new ApolloServer({
     const token = req.headers.authorization || '';
     const path = req.body.operationName;  // Obteniendo el nombre de la operación
    
-    const publicPaths = ['LoginUser', 'AddUser', 'ValidateToken'];  // Define tus rutas públicas aquí
+    const publicPaths = ['LoginUser', 'AddUser', 'ValidateToken', 'ForgotPassword','ResetPassword'];
+
+    // Define tus rutas públicas aquí
 
     if (publicPaths.includes(path)) {
       // Si la ruta está en la lista de rutas públicas, se puede acceder a ella sin un token
@@ -176,6 +180,8 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+
+
 
 app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 20 })); 
 

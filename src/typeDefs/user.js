@@ -62,6 +62,8 @@ const UserTypeDefs = gql`
     updateUser(id: ID!, input: UserUpdateInput!): User!
     deleteUser(id: ID!): Boolean!
     loginUser(input: LoginInput): AuthPayload
+    forgotPassword(email: String!): Boolean
+    resetPassword(token: String!, password: String!): Boolean
   }
 `;
 

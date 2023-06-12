@@ -2,6 +2,19 @@ const db = require('../../models');
 const { User, Address, Cart, Order, Review, Company } = db;
 const bcrypt = require('bcryptjs');
 const { generateToken , verifyToken} = require('../auth/auth');
+const nodemailer = require('nodemailer');
+
+const crypto = require('crypto');
+
+
+const transporter = nodemailer.createTransport({
+  host: "sandbox.smtp.mailtrap.io",
+  port: 2525,
+  auth: {
+    user: "e7c2cb8c981b2c",
+    pass: "4930bb8c3b23d2"
+  }
+});
 
 
 const UserResolvers = {
@@ -108,6 +121,63 @@ const UserResolvers = {
         };
       } catch (err) {
         throw new Error(`Error logging in user: ${err}`);
+      }
+    },
+    forgotPassword: async (parent, { email }) => {
+      try {
+        const user = await User.findOne({ where: { email } });
+  
+        if (!user) {
+          throw new Error('User not found');
+        }
+  
+        // Generar un token de restablecimiento de contraseña
+        const resetToken = crypto.randomBytes(20).toString('hex');
+  
+        // Establecer el token y la fecha de expiración en el usuario
+        user.resetToken = resetToken;
+        user.resetTokenExpiration = Date.now() + 3600000; // Caduca en 1 hora
+        await user.save();
+  
+        // Enviar el correo electrónico al usuario con el enlace de restablecimiento de contraseña
+        await transporter.sendMail({
+          to: user.email,
+          from: 'your-email@example.com', // Reemplaza con tu dirección de correo electrónico
+          subject: 'Reset Password',
+          html: `
+            <p>You requested a password reset</p>
+            <p>Click this <a href="http://localhost:3000/reset/${resetToken}">link</a> to set a new password.</p>
+          `,
+        });
+  
+        return true;
+      } catch (err) {
+        throw new Error(`Error sending password reset email: ${err}`);
+      }
+    },
+    resetPassword: async (parent, { token, password }) => {
+      try {
+        const user = await User.findOne({
+          where: {
+            resetToken: token,
+            resetTokenExpiration: { $gt: Date.now() },
+          },
+        });
+  
+        if (!user) {
+          throw new Error('Invalid or expired token');
+        }
+  
+        // Establecer la nueva contraseña y eliminar el token de restablecimiento
+        const hashedPassword = await bcrypt.hash(password, 10);
+        user.password = hashedPassword;
+        user.resetToken = null;
+        user.resetTokenExpiration = null;
+        await user.save();
+  
+        return true;
+      } catch (err) {
+        throw new Error(`Error resetting password: ${err}`);
       }
     },
   },
