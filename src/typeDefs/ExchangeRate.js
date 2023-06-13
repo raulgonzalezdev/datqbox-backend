@@ -10,11 +10,13 @@ const ExchangeRateTypeDefs = gql`
     rate: Float!
     date: Date!
     currencyType: CurrencyType
+    
   }
 
   extend type Query {
     getExchangeRate(id: ID!): ExchangeRate
     getAllExchangeRates: [ExchangeRate]
+    getExchangeRateByCurrencyId(currencyId: ID!): [ExchangeRate]
   }
 
   input ExchangeRateInput {

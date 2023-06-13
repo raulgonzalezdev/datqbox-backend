@@ -91,7 +91,10 @@ const InvoiceResolvers = {
     invoicePaymentMethods: async (invoice) => {
       return await InvoicePaymentMethod.findAll({ where: { invoiceId: invoice.id } });
     },
-    taxInvoices: async (invoice) => await invoice.getTaxInvoices(), 
+    taxInvoices: async (invoice) => {
+      invoice = await Invoice.findByPk(invoice.id);  // Vuelve a buscar la instancia Sequelize aquí
+      return await invoice.getTaxInvoices(); 
+    },
     exchangeRate: async (invoice) => {
       return await ExchangeRate.findByPk(invoice.exchangeRateId);
     },
