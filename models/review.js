@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
   this.belongsTo(models.User, { foreignKey: "userId", onDelete: "CASCADE", onUpdate: "CASCADE" });
 
   this.belongsTo(models.Product, { foreignKey: "productId", onDelete: "CASCADE", onUpdate: "CASCADE" });
-  this.belongsTo(models.Product, { foreignKey: "productId", onDelete: "CASCADE", onUpdate: "CASCADE" });
+  
     }
   }
   Review.init({

@@ -3,8 +3,9 @@ const { User, Address, Cart, Order, Review, Company } = db;
 const bcrypt = require('bcryptjs');
 const { generateToken , verifyToken} = require('../auth/auth');
 const nodemailer = require('nodemailer');
+
 const crypto = require('crypto');
-const client = require('../redis/redisClient');
+
 
 const transporter = nodemailer.createTransport({
   host: "sandbox.smtp.mailtrap.io",
@@ -15,25 +16,20 @@ const transporter = nodemailer.createTransport({
   }
 });
 
+
 const UserResolvers = {
   Query: {
     user: async (parent, { id }) => {
       try {
-        let user = await client.get(`user:${id}`);
-        if (!user) {
-          user = await User.findByPk(id, {
-            include: [
-              Address,
-              Cart,
-              Order,
-              Review,
-              Company
-            ]
-          });
-          await client.set(`user:${id}`, JSON.stringify(user));
-        } else {
-          user = JSON.parse(user);
-        }
+        const user = await User.findByPk(id, {
+          include: [
+            Address,
+            Cart,
+            Order,
+            Review,
+            Company
+          ]
+        });
         return user;
       } catch (err) {
         throw new Error(`Error fetching user with id ${id}: ${err}`);
@@ -41,21 +37,15 @@ const UserResolvers = {
     },
     users: async () => {
       try {
-        let users = await client.get('users');
-        if (!users) {
-          users = await User.findAll({
-            include: [
-              Address,
-              Cart,
-              Order,
-              Review,
-              Company
-            ]
-          });
-          await client.set('users', JSON.stringify(users));
-        } else {
-          users = JSON.parse(users);
-        }
+        const users = await User.findAll({
+          include: [
+            Address,
+            Cart,
+            Order,
+            Review,
+            Company
+          ]
+        });
         return users;
       } catch (err) {
         throw new Error(`Error fetching users: ${err}`);
@@ -63,6 +53,8 @@ const UserResolvers = {
     },
     validateToken: async (_, { token }) => {
       const decodedToken = verifyToken(token);
+      // Si el token es válido, decodedToken contendrá el payload del token.
+      // Si el token no es válido o ha expirado, verifyToken devolverá null.
       if (decodedToken !== null) {
         return true;
       } else {
@@ -76,13 +68,13 @@ const UserResolvers = {
         const hashedPassword = await bcrypt.hash(input.password, 10);
         const user = await User.create({ ...input, password: hashedPassword });
         const token = generateToken(user);
-        await client.del('users');
         return {
           token,
           user,
         };
       } catch (err) {
-        if (err.code === '23505') { 
+        // Asumiendo que estás utilizando pg-promise, pg o sequelize
+        if (err.code === '23505') { // Código de error para violación de la restricción de unicidad en PostgreSQL
           throw new Error('Este correo electrónico ya está en uso');
         }
         throw new Error(`Error adding user: ${err}`);
@@ -92,8 +84,6 @@ const UserResolvers = {
       try {
         await User.update(input, { where: { id } });
         const updatedUser = await User.findByPk(id);
-        await client.del(`user:${id}`);
-        await client.del('users');
         return updatedUser;
       } catch (err) {
         throw new Error(`Error updating user with id ${id}: ${err}`);
@@ -103,8 +93,6 @@ const UserResolvers = {
       try {
         const user = await User.findByPk(id);
         await user.destroy();
-        await client.del(`user:${id}`);
-        await client.del('users');
         return user;
       } catch (err) {
         throw new Error(`Error deleting user with id ${id}: ${err}`);
@@ -143,15 +131,18 @@ const UserResolvers = {
           throw new Error('User not found');
         }
   
+        // Generar un token de restablecimiento de contraseña
         const resetToken = crypto.randomBytes(20).toString('hex');
   
+        // Establecer el token y la fecha de expiración en el usuario
         user.resetToken = resetToken;
-        user.resetTokenExpiration = Date.now() + 3600000;
+        user.resetTokenExpiration = Date.now() + 3600000; // Caduca en 1 hora
         await user.save();
   
+        // Enviar el correo electrónico al usuario con el enlace de restablecimiento de contraseña
         await transporter.sendMail({
           to: user.email,
-          from: 'your-email@example.com',
+          from: 'your-email@example.com', // Reemplaza con tu dirección de correo electrónico
           subject: 'Reset Password',
           html: `
             <p>You requested a password reset</p>
@@ -177,6 +168,7 @@ const UserResolvers = {
           throw new Error('Invalid or expired token');
         }
   
+        // Establecer la nueva contraseña y eliminar el token de restablecimiento
         const hashedPassword = await bcrypt.hash(password, 10);
         user.password = hashedPassword;
         user.resetToken = null;

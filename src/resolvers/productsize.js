@@ -13,11 +13,11 @@ const ProductSizeResolvers = {
       }
       return productSizes;
     },
-    getProductSizesByProductId: async (_, { productId }) => {
-      let productSizes = await client.get(`productSizes:${productId}`);
+    getProductSizesByProductId: async (_, { ProductId }) => {
+      let productSizes = await client.get(`productSizes:${ProductId}`);
       if (!productSizes) {
-        productSizes = await ProductSize.findAll({ where: { productId } });
-        await client.set(`productSizes:${productId}`, JSON.stringify(productSizes));
+        productSizes = await ProductSize.findAll({ where: { ProductId } });
+        await client.set(`productSizes:${ProductId}`, JSON.stringify(productSizes));
       } else {
         productSizes = JSON.parse(productSizes);
       }
@@ -28,35 +28,35 @@ const ProductSizeResolvers = {
     addProductSize: async (_, { productSize }) => {
       const newProductSize = await ProductSize.create(productSize);
       await client.del('productSizes');
-      await client.del(`productSizes:${productSize.productId}`);
+      await client.del(`productSizes:${productSize.ProductId}`);
       return newProductSize;
     },
     removeProductSize: async (_, { input }) => {
-      const { productId } = input;
+      const { ProductId } = input;
       const deletedProductSize = await ProductSize.destroy({ 
         where: { 
-          productId: productId
+          ProductId: ProductId
         } 
       });
       await client.del('productSizes');
-      await client.del(`productSizes:${productId}`);
+      await client.del(`productSizes:${ProductId}`);
       return deletedProductSize > 0; // Returns true if a record was deleted, else false
     },
     addMultipleProductSizes: async (_, { input }) => {
       const newProductSizes = await ProductSize.bulkCreate(input);
       await client.del('productSizes');
       input.forEach(item => {
-        client.del(`productSizes:${item.productId}`);
+        client.del(`productSizes:${item.ProductId}`);
       });
       return newProductSizes;
     },
   },
   ProductSize: {
     size: async (productSize) => {
-      let size = await client.get(`size:${productSize.sizeId}`);
+      let size = await client.get(`size:${productSize.SizeId}`);
       if (!size) {
-        size = await Size.findByPk(productSize.sizeId);
-        await client.set(`size:${productSize.sizeId}`, JSON.stringify(size));
+        size = await Size.findByPk(productSize.SizeId);
+        await client.set(`size:${productSize.SizeId}`, JSON.stringify(size));
       } else {
         size = JSON.parse(size);
       }
@@ -66,3 +66,4 @@ const ProductSizeResolvers = {
 };
 
 module.exports = ProductSizeResolvers;
+

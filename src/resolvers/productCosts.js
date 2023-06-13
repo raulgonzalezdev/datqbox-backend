@@ -13,16 +13,29 @@ const productCostsResolvers = {
             }
             return productCosts;
         },
-        productCost: async (parent, { id }) => {
-            let productCost = await client.get(`productCost:${id}`);
-            if (!productCost) {
-                productCost = await ProductCosts.findByPk(id);
-                await client.set(`productCost:${id}`, JSON.stringify(productCost));
+        productCost: async (parent, { productId }) => {
+            // let productCost = await client.get(`productCost:${id}`);
+            // if (!productCost) {
+            //     productCost = await ProductCosts.findByPk(id);
+            let productCosts = await client.get(`productCosts:${productId}`);
+            if (!productCosts) {
+              productCosts = await ProductCosts.findAll({ where: { productId: productId } });
+                await client.set(`productCosts:${productId}`, JSON.stringify(productCosts));
             } else {
-                productCost = JSON.parse(productCost);
+                productCosts = JSON.parse(productCosts);
             }
-            return productCost;
+            return productCosts;
         },
+        productCostByProduct: async (parent, { productId }) => {
+            let productCosts = await client.get(`productCosts:${productId}`);
+            if (!productCosts) {
+              productCosts = await ProductCosts.findAll({ where: { productId: productId } });
+              await client.set(`productCosts:${productId}`, JSON.stringify(productCosts));
+            } else {
+              productCosts = JSON.parse(productCosts);
+            }
+            return productCosts;
+          },
     },
 
     Mutation: {
@@ -55,3 +68,42 @@ const productCostsResolvers = {
 
 module.exports = productCostsResolvers;
 
+
+// const client = require('../redis/redisClient');
+// const { ProductCosts, Product } = require('../../models');
+
+// const productCostsResolvers = {
+//     Query: {
+
+  
+//         productCosts: async () => {
+//           return await ProductCosts.findAll();
+//         },
+//         productCost: async (parent, { id }) => {
+//           return await ProductCosts.findByPk(id);
+//         },
+//     },
+    
+//     Mutation: {
+//         createProductCosts: async (parent, { input }) => {
+//           return await ProductCosts.create(input);
+//         },
+//         updateProductCosts: async (parent, { id, input }) => {
+//           const productCosts = await ProductCosts.findByPk(id);
+//           return await productCosts.update(input);
+//         },
+//         deleteProductCosts: async (parent, { id }) => {
+//           return await ProductCosts.destroy({
+//             where: { id }
+//           });
+//         },
+//     },
+    
+//     ProductCosts: {
+//         product: async (productCosts) => {
+//           return await Product.findByPk(productCosts.productId);
+//         },
+//     },
+// };
+
+// module.exports = productCostsResolvers;

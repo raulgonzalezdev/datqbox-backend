@@ -35,7 +35,8 @@ type ProductCosts {
   
   extend type Query {
     productCosts: [ProductCosts!]!
-    productCost(id: ID!): ProductCosts
+    productCost(productId: ID!): [ProductCosts]
+    productCostByProduct(productId: ID!): [ProductCosts]
   }
   
   extend type Mutation {

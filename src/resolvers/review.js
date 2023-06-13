@@ -8,7 +8,7 @@ const ReviewResolvers = {
       let reviews = await client.get('reviews');
       if (!reviews) {
         reviews = await Review.findAll({
-          include: ['user', 'product'],
+          include: [User, Product],
         });
         await client.set('reviews', JSON.stringify(reviews));
       } else {
@@ -16,6 +16,7 @@ const ReviewResolvers = {
       }
       return reviews;
     },
+    
   },
   Mutation: {
     createReview: async (_, { input }) => {
