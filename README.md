@@ -1,47 +1,45 @@
-# Catálogo de productos
+# datqbox-backend
 
-Este proyecto es un ejemplo de cómo crear un catálogo de productos en React utilizando GraphQL y Apollo Client. En este proyecto, los usuarios pueden ver una lista de productos y seleccionar un producto para ver sus detalles.
+## Description
 
-El servidor GraphQL proporciona datos de productos que se muestran en la aplicación cliente de React. Los datos del producto se organizan en tres tipos: simple, rentable y espacio. Cada tipo de producto tiene diferentes campos de datos que se muestran en la página de detalles del producto.
+This is the "datqbox-backend" project, version 1.0.0. It is a backend application developed using Node.js, Express, and Sequelize ORM. It provides GraphQL API endpoints for a commerce platform.
 
-La aplicación de React utiliza Apollo Client para conectarse al servidor GraphQL y recuperar los datos de los productos. Se utiliza Google Maps para mostrar la ubicación del producto en el caso de los productos de espacio.
+## Getting Started
 
-## Requerimientos
+To get started with this project, follow these steps:
 
-- Node.js instalado en el sistema.
-- Conexión a Internet.
+1. Clone the repository: `git clone https://gitlab.com/datqbox/datqbox-backend`
+2. Install the dependencies: `npm install`
+3. Set up the PostgreSQL database:
+   - Ensure PostgreSQL is installed and running.
+   - Create a database named "ecommerce".
+   - Set up the database connection in the `.env` file.
+4. Run database migrations: `npx sequelize-cli db:migrate`
+5. Start the server: `npm start`
 
-## Instalación
+## Scripts
 
-1. Clonar el repositorio: `git clone https://github.com/raulgonzalezdev/reto-uey.git`.
-2. Navegar a la carpeta del proyecto: `cd reto-uey`.
-3. Instalar las dependencias: `npm install`.
-4. Iniciar el servidor GraphQL: `npm run start:server`. El servidor estará disponible en `http://localhost:4000/graphql`.
-5. Iniciar la aplicación de React: `npm start`. La aplicación estará disponible en `http://localhost:3000`.
+- `start`: Starts the server using Node.js
+- `chmod`: Grants execution permissions to shell scripts
+- `db`: Runs the shell script to set up the database
+- `test`: Runs the tests (currently no tests specified)
 
-## Uso
+## Dependencies
 
-La aplicación consta de dos componentes principales:
+- [apollo-server](https://www.npmjs.com/package/apollo-server) - v3.12.0
+- [bcryptjs](https://www.npmjs.com/package/bcryptjs) - v2.4.3
+- [cors](https://www.npmjs.com/package/cors) - v2.8.5
+- [crypto](https://nodejs.org/api/crypto.html) - v1.0.1
+- [dotenv](https://www.npmjs.com/package/dotenv) - v16.0.3
+- [express](https://www.npmjs.com/package/express) - v4.18.2
+- ... (list of other dependencies)
 
-- `ProductList`: muestra una lista de productos. Los usuarios pueden hacer clic en un producto para ver sus detalles.
-- `ProductDetails`: muestra los detalles de un producto seleccionado.
+## License
 
-Cuando la aplicación se inicia, se muestra la lista de productos. Los usuarios pueden hacer clic en un producto para ver sus detalles en la página `ProductDetails`. Los detalles del producto se organizan en diferentes secciones dependiendo del tipo de producto. Si el producto es un espacio, se muestra un mapa de Google Maps con la ubicación del espacio.
+This project is licensed under the [MIT License](LICENSE).
 
-## Tecnologías utilizadas
+## Notes
 
-- React: biblioteca de JavaScript para construir interfaces de usuario.
-- GraphQL: lenguaje de consulta y manipulación de datos para APIs.
-- Apollo Client: biblioteca de gestión de estado y conexión a servidores GraphQL.
-- Google Maps: plataforma de mapas y geolocalización.
-- Node.js: entorno de JavaScript para el servidor.
-- Express: framework de Node.js para crear aplicaciones web y APIs.
+- Ensure PostgreSQL is installed and running with a database named "ecommerce" before starting the server.
 
-## Autor
-
-- Nombre: RAUL GONZALEZ
-- Email: GQ.RAUL@GMAIL.COM
-
-## Licencia
-
-Este proyecto está licenciado bajo la Licencia MIT. Consulta el archivo LICENSE para más detalles.
+For more information, please refer to the [GitLab repository](https://gitlab.com/datqbox/datqbox-backend).
